@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Member {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,12 +20,14 @@ public class Member {
 	private String username;
 
 	@Email
+	@NotNull
 	@Column(unique = true)
 	private String email;
 
 	@NotNull
 	private String password;
 
+	// Enum으로 설정
 	@Enumerated(EnumType.STRING)
 	private Role role;
 }
