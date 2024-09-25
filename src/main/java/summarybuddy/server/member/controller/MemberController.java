@@ -23,37 +23,37 @@ import summarybuddy.server.member.repository.domain.Member;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
-    private final MemberJpaRepository memberJpaRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
-    private final JwtUtil jwtUtil;
+	private final MemberJpaRepository memberJpaRepository;
+	private final PasswordEncoder passwordEncoder;
+	private final AuthenticationManager authenticationManager;
+	private final JwtUtil jwtUtil;
 
-    @PostMapping({"/join"})
-    public ResponseEntity<String> join(@Valid @RequestBody JoinDto joinDto) {
-        if (this.memberJpaRepository.findByUsername(joinDto.getUsername()) != null) {
-            return ResponseEntity.badRequest().body("Username already exists");
-        } else if (!joinDto.isValidEmail()) {
-            return ResponseEntity.badRequest().body("Email is not valid");
-        } else if (!joinDto.checkPassword()) {
-            return ResponseEntity.badRequest().body("Passwords do not match");
-        } else {
-            Member member = new Member();
-            member.setEmail(joinDto.getEmail());
-            member.setUsername(joinDto.getUsername());
-            member.setPassword(this.passwordEncoder.encode(joinDto.getPassword()));
-            this.memberJpaRepository.save(member);
-            return ResponseEntity.ok("User created successfully");
-        }
-    }
+	@PostMapping({"/join"})
+	public ResponseEntity<String> join(@Valid @RequestBody JoinDto joinDto) {
+		if (this.memberJpaRepository.findByUsername(joinDto.getUsername()) != null) {
+			return ResponseEntity.badRequest().body("Username already exists");
+		} else if (!joinDto.isValidEmail()) {
+			return ResponseEntity.badRequest().body("Email is not valid");
+		} else if (!joinDto.checkPassword()) {
+			return ResponseEntity.badRequest().body("Passwords do not match");
+		} else {
+			Member member = new Member();
+			member.setEmail(joinDto.getEmail());
+			member.setUsername(joinDto.getUsername());
+			member.setPassword(this.passwordEncoder.encode(joinDto.getPassword()));
+			this.memberJpaRepository.save(member);
+			return ResponseEntity.ok("User created successfully");
+		}
+	}
 
-    @PostMapping({"/login"})
-    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) {
-        Authentication authentication =
-                this.authenticationManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginDto.getUsername(), loginDto.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-        return ResponseEntity.ok(this.jwtUtil.generateToken(userDetails));
-    }
+	@PostMapping({"/login"})
+	public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) {
+		Authentication authentication =
+				this.authenticationManager.authenticate(
+						new UsernamePasswordAuthenticationToken(
+								loginDto.getUsername(), loginDto.getPassword()));
+		SecurityContextHolder.getContext().setAuthentication(authentication);
+		UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+		return ResponseEntity.ok(this.jwtUtil.generateToken(userDetails));
+	}
 }

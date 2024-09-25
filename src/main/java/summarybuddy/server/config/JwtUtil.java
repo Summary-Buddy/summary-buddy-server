@@ -23,7 +23,7 @@ public class JwtUtil {
 		this.key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 	}
 
-    // JWT 생성 메서드
+	// JWT 생성 메서드
 	// 사용자 정보를 활용할 경우를 위해 UserDetails 객체를 사용
 	public String generateToken(UserDetails userDetails) {
 		Map<String, Object> claims = new HashMap<>();
@@ -32,9 +32,9 @@ public class JwtUtil {
 
 	// JWT 생성에 필요한 내부 메서드
 	private String createToken(Map<String, Object> claims, String subject) {
-        // 만료 시간을 1시간으로 설정 (밀리초 단위)
-        long EXPIRATION_TIME = 1000 * 60 * 60;
-        return Jwts.builder()
+		// 만료 시간을 1시간으로 설정 (밀리초 단위)
+		long EXPIRATION_TIME = 1000 * 60 * 60;
+		return Jwts.builder()
 				.setClaims(claims)
 				.setSubject(subject)
 				.setIssuer("summary buddy")

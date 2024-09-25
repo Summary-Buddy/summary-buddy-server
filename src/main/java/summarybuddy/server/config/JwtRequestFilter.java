@@ -22,10 +22,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 	private final JwtUtil jwtUtil;
 
 	// 생성자
-    public JwtRequestFilter(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-    }
+	public JwtRequestFilter(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
+		this.userDetailsService = userDetailsService;
+		this.jwtUtil = jwtUtil;
+	}
 
 	// OncePerRequestFilter 를 위해 정의해야 하는 부분
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -54,6 +54,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			}
 		}
 
-        chain.doFilter(request, response); // 필터 체인 계속 진행
+		chain.doFilter(request, response); // 필터 체인 계속 진행
 	}
 }

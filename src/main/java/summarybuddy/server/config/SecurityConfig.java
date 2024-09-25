@@ -28,11 +28,11 @@ public class SecurityConfig {
 	@Autowired
 	private CustomUserDetailsService userDetailsService;
 
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
-        this.jwtRequestFilter = jwtRequestFilter;
-    }
+	public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
+		this.jwtRequestFilter = jwtRequestFilter;
+	}
 
-    @Bean
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				// 테스트 용 localhost:3000
@@ -47,7 +47,8 @@ public class SecurityConfig {
 				// Swagger
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth ->
-						auth.requestMatchers("/swagger-ui/index.html").permitAll()
+						auth.requestMatchers("/api/member/join").permitAll()
+								.requestMatchers("/swagger-ui/index.html").permitAll()
 								.anyRequest().authenticated()
 				);
 
