@@ -15,22 +15,20 @@ import summarybuddy.server.member.repository.domain.Member;
 public class MemberService {
 	private final MemberRepository memberRepository;
 	private final PasswordEncoder passwordEncoder;
+	private final ValidationService validationService;
 
 	public void save(MemberJoinRequest request) {
-		if (memberRepository.findByUsername(request.getUsername()).isPresent()) {
-			throw new RuntimeException("Username already exists");
-		} else if (!request.emailValidation()) {
-			throw new RuntimeException("Email is not valid");
-		} else if (!request.checkPassword()) {
-			throw new RuntimeException("Passwords do not match");
-		} else {
-			Member member = MemberMapper.from(request, passwordEncoder.encode(request.getPassword()));
-			memberRepository.save(member);
-		}
-	}
+		// 사용자 이름 검증
+		validationService.validateUsername(request.getUsername());
 
-	public boolean usernameExists(String username) {
-		return memberRepository.findByUsername(username).isPresent();
+		// 이메일 검증
+		validationService.validateEmail(request.getEmail());
+
+		// 비밀번호 검증
+		validationService.validatePassword(request.getPassword(), request.getPasswordConfirm());
+
+		Member member = MemberMapper.from(request, passwordEncoder.encode(request.getPassword()));
+		memberRepository.save(member);
 	}
 
 	public void updateMember(Long memberId, MemberUpdateRequest request) {
@@ -39,28 +37,17 @@ public class MemberService {
 
 		// 비밀번호 변경
 		if (request.getNewPassword() != null) {
-			if (!request.isPasswordConfirmed()) {
-				throw new RuntimeException("Passwords do not match");
-			}
+			validationService.validatePassword(request.getNewPassword(), request.getNewPasswordConfirm());
 			String encodedPassword = passwordEncoder.encode(request.getNewPassword());
 			member.updatePassword(encodedPassword);
 		}
 
 		// 이메일 변경
 		if (request.getNewEmail() != null && !member.getEmail().equals(request.getNewEmail())) {
-			if (!request.isEmailValid()) {
-				throw new RuntimeException("Email is not valid");
-			}
-			// 이메일 중복 체크
-			if (memberRepository.findByEmail(request.getNewEmail()).isPresent()) {
-				throw new RuntimeException("Email already exists");
-			}
+			validationService.validateEmail(request.getNewEmail());
 			member.updateEmail(request.getNewEmail());
 		}
 
 		memberRepository.save(member);
-
-		// 업데이트 성공 로그
-		System.out.println("Member updated: " + member.getEmail());
 	}
 }

@@ -31,14 +31,4 @@ public class MemberJoinRequest {
 		this.password = password;
 		this.passwordConfirm = passwordConfirm;
 	}
-
-	// 패스워드 확인 메서드
-	public boolean checkPassword() {
-		return this.password != null && this.password.equals(this.passwordConfirm);
-	}
-
-	// 이메일 형식 확인 메서드
-	public boolean emailValidation() {
-		return this.email != null && this.email.contains("@");
-	}
 }

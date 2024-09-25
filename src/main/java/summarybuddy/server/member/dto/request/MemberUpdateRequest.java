@@ -8,17 +8,12 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MemberUpdateRequest {
+
+    private Long memberId;
+
     @Email(message = "Email should be valid")
     private String newEmail;
 
     private String newPassword;
     private String newPasswordConfirm;
-
-    public boolean isPasswordConfirmed() {
-        return this.newPassword != null && this.newPassword.equals(this.newPasswordConfirm);
-    }
-
-    public boolean isEmailValid() {
-        return this.newEmail != null && this.newEmail.contains("@");
-    }
 }
