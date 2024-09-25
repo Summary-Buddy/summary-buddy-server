@@ -14,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
+import summarybuddy.server.common.dto.JwtResponse;
 import summarybuddy.server.common.util.JwtUtil;
 
 import java.io.IOException;
@@ -68,7 +69,9 @@ public class JsonUsernamePasswordAuthenticationFilter extends AbstractAuthentica
 		UserDetails customUserDetails = (UserDetails) authResult.getPrincipal();
 		String token = jwtUtil.generateToken(customUserDetails);
 
-		response.addHeader("Authorization", "Bearer " + token);
+		JwtResponse jwtResponseDto = new JwtResponse("Bearer " + token);
+		String jwtResponse = objectMapper.writeValueAsString(jwtResponseDto);
+		response.getWriter().write(jwtResponse);
 	}
 
 	@Data
