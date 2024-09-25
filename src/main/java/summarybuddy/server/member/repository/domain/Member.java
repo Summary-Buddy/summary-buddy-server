@@ -38,4 +38,13 @@ public class Member {
 		this.password = password;
 		this.role = role;
 	}
+
+
+	public void updatePassword(String newPassword) {
+		this.password = newPassword;
+	}
+
+	public void updateEmail(String newEmail) {
+		this.email = newEmail;
+	}
 }
