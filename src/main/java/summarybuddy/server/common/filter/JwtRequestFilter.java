@@ -1,35 +1,36 @@
-package summarybuddy.server.config;
+package summarybuddy.server.common.filter;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import summarybuddy.server.common.util.JwtUtil;
 import summarybuddy.server.member.service.CustomUserDetailsService;
 
 import java.io.IOException;
 
 @Component
+@RequiredArgsConstructor
 // 요청이 중복으로 처리되지 않도록 OncePerRequestFilter 를 사용
 public class JwtRequestFilter extends OncePerRequestFilter {
-	// @Autowired 대신 생성자 주입 사용
-	private final CustomUserDetailsService userDetailsService;
 	private final JwtUtil jwtUtil;
+	private final CustomUserDetailsService userDetailsService;
 
-	// 생성자
-    public JwtRequestFilter(CustomUserDetailsService userDetailsService, JwtUtil jwtUtil) {
-        this.userDetailsService = userDetailsService;
-        this.jwtUtil = jwtUtil;
-    }
-
+	@Override
 	// OncePerRequestFilter 를 위해 정의해야 하는 부분
 	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
 			throws ServletException, IOException {
+		if (checkPassUri(request)) {
+			chain.doFilter(request, response);
+			return;
+		}
 
 		final String authorizationHeader = request.getHeader("Authorization");
 		String username = null;
@@ -43,7 +44,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
 		// JWT 가 유효하고 SecurityContext 에 Authentication 이 설정되어 있지 않은 경우
 		if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+			UserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
 			// JWT 의 유효성을 검사
 			if (jwtUtil.validateToken(jwt, userDetails)) {
@@ -54,6 +55,12 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 			}
 		}
 
-        chain.doFilter(request, response); // 필터 체인 계속 진행
+		chain.doFilter(request, response); // 필터 체인 계속 진행
+	}
+
+	private Boolean checkPassUri(HttpServletRequest request) {
+		return request.getRequestURI().startsWith("/swagger-ui/**")
+				|| request.getRequestURI().startsWith("/api/member/join")
+				|| request.getRequestURI().startsWith("/login");
 	}
 }

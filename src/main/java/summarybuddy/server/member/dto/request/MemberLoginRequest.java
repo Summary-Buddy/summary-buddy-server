@@ -7,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class LoginDto {
+public class MemberLoginRequest {
 	@NotBlank(message = "Username is required")
 	private String username;
 

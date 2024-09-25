@@ -1,6 +1,6 @@
 package summarybuddy.server.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,25 +14,22 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
-import summarybuddy.server.member.service.CustomUserDetailsService;
+import summarybuddy.server.common.filter.JwtRequestFilter;
+import summarybuddy.server.common.filter.LoginFilter;
+import summarybuddy.server.common.util.JwtUtil;
 
 import java.util.Arrays;
 import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
+@RequiredArgsConstructor
 public class SecurityConfig {
-
+	private final JwtUtil jwtUtil;
 	private final JwtRequestFilter jwtRequestFilter;
+	private final AuthenticationConfiguration authenticationConfiguration;
 
-	@Autowired
-	private CustomUserDetailsService userDetailsService;
-
-    public SecurityConfig(JwtRequestFilter jwtRequestFilter) {
-        this.jwtRequestFilter = jwtRequestFilter;
-    }
-
-    @Bean
+	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		http.csrf(AbstractHttpConfigurer::disable)
 				// 테스트 용 localhost:3000
@@ -47,25 +44,28 @@ public class SecurityConfig {
 				// Swagger
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth ->
-						auth.requestMatchers("/swagger-ui/index.html").permitAll()
+						auth.requestMatchers("/swagger-ui/**", "/v3/**", "/error", "/api/member/join").permitAll()
 								.anyRequest().authenticated()
 				);
 
 		// JWT 필터를 추가
-		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		http
+				.addFilterBefore(jwtRequestFilter, LoginFilter.class);
+		http
+				.addFilterAt(
+						new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration)),
+						UsernamePasswordAuthenticationFilter.class);
+
 		return http.build();
 	}
 
-	// PasswordEncoder 정의
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
 
-	// AuthenticationManger 명시적 정의
 	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
-			throws Exception {
-		return authenticationConfiguration.getAuthenticationManager();
+	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+		return configuration.getAuthenticationManager();
 	}
 }
