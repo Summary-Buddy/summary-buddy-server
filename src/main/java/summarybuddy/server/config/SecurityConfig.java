@@ -1,5 +1,6 @@
 package summarybuddy.server.config;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,8 +15,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import summarybuddy.server.common.filter.JsonUsernamePasswordAuthenticationFilter;
 import summarybuddy.server.common.filter.JwtRequestFilter;
-import summarybuddy.server.common.filter.LoginFilter;
 import summarybuddy.server.common.util.JwtUtil;
 
 import java.util.Arrays;
@@ -50,10 +51,10 @@ public class SecurityConfig {
 
 		// JWT 필터를 추가
 		http
-				.addFilterBefore(jwtRequestFilter, LoginFilter.class);
+				.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 		http
-				.addFilterAt(
-						new LoginFilter(jwtUtil, authenticationManager(authenticationConfiguration)),
+				.addFilterBefore(
+						jsonUsernamePasswordAuthenticationFilter(),
 						UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
@@ -67,5 +68,14 @@ public class SecurityConfig {
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 		return configuration.getAuthenticationManager();
+	}
+
+	@Bean
+	public JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter() throws Exception {
+		JsonUsernamePasswordAuthenticationFilter jsonUsernamePasswordAuthenticationFilter
+				= new JsonUsernamePasswordAuthenticationFilter(jwtUtil, new ObjectMapper());
+		jsonUsernamePasswordAuthenticationFilter
+				.setAuthenticationManager(authenticationManager(authenticationConfiguration));
+		return jsonUsernamePasswordAuthenticationFilter;
 	}
 }
