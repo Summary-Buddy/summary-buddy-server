@@ -24,7 +24,7 @@ public class MemberController {
 	}
 
 	@PostMapping("/check-username")
-	public ResponseEntity<Boolean> checkUsername(@RequestBody UsernameCheckRequest request) {
+	public ResponseEntity<Boolean> checkUsername(@Valid @RequestBody UsernameCheckRequest request) {
 		boolean isExists = memberService.usernameExists(request.getUsername());
 		return ResponseEntity.ok(isExists);
 	}
