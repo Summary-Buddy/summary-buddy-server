@@ -14,11 +14,11 @@ public class MemberUpdateRequest {
     private String newPassword;
     private String newPasswordConfirm;
 
-    public boolean checkPassword() {
+    public boolean isPasswordConfirmed() {
         return this.newPassword != null && this.newPassword.equals(this.newPasswordConfirm);
     }
 
-    public boolean emailValidation() {
+    public boolean isEmailValid() {
         return this.newEmail != null && this.newEmail.contains("@");
     }
 }

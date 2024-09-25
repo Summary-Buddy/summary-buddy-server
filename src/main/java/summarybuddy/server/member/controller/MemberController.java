@@ -27,9 +27,9 @@ public class MemberController {
 		return ResponseEntity.ok(isExists);
 	}
 
-	@PatchMapping("/update")
-	public ResponseEntity<?> update(@Valid @RequestBody MemberUpdateRequest request) {
-		memberService.updateMember(request);
+	@PatchMapping("/update/{memberId}")
+	public ResponseEntity<?> update(@PathVariable Long memberId, @Valid @RequestBody MemberUpdateRequest request) {
+		memberService.updateMember(memberId, request);
 		return ResponseEntity.ok().build();
 	}
 }

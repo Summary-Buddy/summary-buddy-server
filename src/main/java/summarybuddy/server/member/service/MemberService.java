@@ -29,17 +29,17 @@ public class MemberService {
 		}
 	}
 
-	public boolean usernameExists(UsernameCheckRequest request) {
-		return memberRepository.findByUsername(request.getUsername()).isPresent();
+	public boolean usernameExists(String username) {
+		return memberRepository.findByUsername(username).isPresent();
 	}
 
-	public void updateMember(MemberUpdateRequest request) {
-		Member member = memberRepository.findByEmail(request.getNewEmail())
+	public void updateMember(Long memberId, MemberUpdateRequest request) {
+		Member member = memberRepository.findById(memberId)
 				.orElseThrow(() -> new RuntimeException("Member not found"));
 
 		// 비밀번호 변경
 		if (request.getNewPassword() != null) {
-			if (!request.checkPassword()) {
+			if (!request.isPasswordConfirmed()) {
 				throw new RuntimeException("Passwords do not match");
 			}
 			String encodedPassword = passwordEncoder.encode(request.getNewPassword());
@@ -47,13 +47,20 @@ public class MemberService {
 		}
 
 		// 이메일 변경
-		if (request.getNewEmail() != null) {
-			if (!request.getNewEmail().contains("@")) {
+		if (request.getNewEmail() != null && !member.getEmail().equals(request.getNewEmail())) {
+			if (!request.isEmailValid()) {
 				throw new RuntimeException("Email is not valid");
+			}
+			// 이메일 중복 체크
+			if (memberRepository.findByEmail(request.getNewEmail()).isPresent()) {
+				throw new RuntimeException("Email already exists");
 			}
 			member.updateEmail(request.getNewEmail());
 		}
 
 		memberRepository.save(member);
+
+		// 업데이트 성공 로그
+		System.out.println("Member updated: " + member.getEmail());
 	}
 }
