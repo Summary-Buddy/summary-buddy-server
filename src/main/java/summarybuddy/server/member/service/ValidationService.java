@@ -2,6 +2,7 @@ package summarybuddy.server.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import summarybuddy.server.member.dto.request.MemberUpdateRequest;
 import summarybuddy.server.member.repository.MemberRepository;
 
 @Service
@@ -32,6 +33,19 @@ public class ValidationService {
         }
         if (!password.equals(confirmedPassword)) {
             throw new RuntimeException("Passwords do not match");
+        }
+    }
+
+    public void validateUpdateRequest(MemberUpdateRequest request) {
+        // 이메일 또는 비밀번호가 제공되어야 함
+        if (request.getNewEmail() != null) {
+            validateEmail(request.getNewEmail());
+        }
+        if (request.getNewPassword() != null) {
+            validatePassword(request.getNewPassword(), request.getNewPasswordConfirm());
+        }
+        if (request.getNewEmail() == null && request.getNewPassword() == null) {
+            throw new RuntimeException("At least one of email or password must be provided");
         }
     }
 }
