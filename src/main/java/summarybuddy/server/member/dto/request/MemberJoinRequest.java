@@ -12,6 +12,7 @@ public class MemberJoinRequest {
 	@NotBlank(message = "Username is required")
 	private String username;
 
+	@NotBlank
 	@Email(message = "Email should be valid")
 	private String email;
 
