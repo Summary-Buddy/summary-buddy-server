@@ -1,11 +1,15 @@
 package summarybuddy.server.report.controller;
 
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import summarybuddy.server.attendees.service.AttendeesService;
 import summarybuddy.server.common.annotation.LoginMember;
 import summarybuddy.server.report.dto.request.ReportCreateRequest;
+import summarybuddy.server.report.dto.response.ReportResponse;
+import summarybuddy.server.report.repository.domain.Report;
 import summarybuddy.server.report.service.ReportService;
 
 @RestController
@@ -13,13 +17,21 @@ import summarybuddy.server.report.service.ReportService;
 @RequestMapping("/api/report")
 public class ReportController {
     private final ReportService reportService;
+    private final AttendeesService attendeesService;
 
     @PostMapping
     public ResponseEntity<?> create(
-            @LoginMember String username,
+            @LoginMember Long memberId,
             @RequestPart("file") MultipartFile file,
             @RequestPart("content") ReportCreateRequest request) {
-        reportService.save(username, file, request);
+        Report report = reportService.save(memberId, file, request);
+        attendeesService.save(memberId, report, request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping
+    public ResponseEntity<List<ReportResponse>> readAll(@LoginMember Long memberId) {
+        List<ReportResponse> response = attendeesService.findReportsByMemberId(memberId);
+        return ResponseEntity.ok().body(response);
     }
 }

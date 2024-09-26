@@ -23,19 +23,15 @@ public class ReportService {
     private final ReportRepository reportRepository;
 
     @Transactional
-    public void save(String username, MultipartFile file, ReportCreateRequest request) {
+    public Report save(Long memberId, MultipartFile file, ReportCreateRequest request) {
         String audioUrl = gcsClient.createAudioUrl(file);
-        Member member =
-                memberRepository
-                        .findByUsername(username)
-                        .orElseThrow(() -> new RuntimeException("MEMBER NOT FOUND"));
-        List<Member> members = memberRepository.findAllByMemberId(request.memberIdList());
-        members.addFirst(member);
+        request.memberIdList().addFirst(memberId);
+        List<Member> members = memberRepository.findAllByMemberIds(request.memberIdList());
         List<String> participants = members.stream().map(Member::getUsername).toList();
 
         String result = googleClient.speechToText(file, audioUrl);
         String summary = googleClient.getSummary(result, participants);
         Report report = ReportMapper.from(summary, audioUrl); // pdf file url로 변경 필요
-        reportRepository.save(report);
+        return reportRepository.save(report);
     }
 }

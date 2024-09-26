@@ -10,7 +10,7 @@ public class ReportRepositoryImpl implements ReportRepository {
     private final ReportJpaRepository reportJpaRepository;
 
     @Override
-    public void save(Report report) {
-        reportJpaRepository.save(report);
+    public Report save(Report report) {
+        return reportJpaRepository.save(report);
     }
 }
