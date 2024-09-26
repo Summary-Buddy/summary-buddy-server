@@ -30,20 +30,20 @@ public class Member {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-	@Builder
-	public Member(Long id, String username, String email, String password, Role role) {
-		this.id = id;
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.role = (role != null) ? role : Role.USER;
-	}
+    @Builder
+    public Member(Long id, String username, String email, String password, Role role) {
+        this.id = id;
+        this.username = username;
+        this.email = email;
+        this.password = password;
+        this.role = (role != null) ? role : Role.USER;
+    }
 
-	public void updatePassword(String newPassword) {
-		this.password = newPassword;
-	}
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
 
-	public void updateEmail(String newEmail) {
-		this.email = newEmail;
-	}
+    public void updateEmail(String newEmail) {
+        this.email = newEmail;
+    }
 }

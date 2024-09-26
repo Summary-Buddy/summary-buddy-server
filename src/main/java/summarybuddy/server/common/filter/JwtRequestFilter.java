@@ -8,11 +8,11 @@ import java.io.IOException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 import summarybuddy.server.common.util.JwtUtil;
+import summarybuddy.server.member.repository.domain.CustomUserDetails;
 import summarybuddy.server.member.service.CustomUserDetailsService;
 
 @Component
@@ -44,7 +44,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         // JWT 가 유효하고 SecurityContext 에 Authentication 이 설정되어 있지 않은 경우
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            CustomUserDetails userDetails = userDetailsService.loadUserByUsername(username);
 
             // JWT 의 유효성을 검사
             if (jwtUtil.validateToken(jwt, userDetails)) {
@@ -60,10 +60,11 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response); // 필터 체인 계속 진행
     }
-	private Boolean checkPassUri(HttpServletRequest request) {
-		return request.getRequestURI().startsWith("/swagger-ui/**")
-				|| request.getRequestURI().startsWith("/api/member/join")
-				|| request.getRequestURI().startsWith("/api/member/check-username")
-				|| request.getRequestURI().startsWith("/login");
-	}
+
+    private Boolean checkPassUri(HttpServletRequest request) {
+        return request.getRequestURI().startsWith("/swagger-ui/**")
+                || request.getRequestURI().startsWith("/api/member/join")
+                || request.getRequestURI().startsWith("/api/member/check-username")
+                || request.getRequestURI().startsWith("/login");
+    }
 }

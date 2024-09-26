@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import summarybuddy.server.member.repository.domain.Member;
 
 public interface MemberJpaRepository extends JpaRepository<Member, Long> {
-	Optional<Member> findByUsername(String username);
-	Optional<Member> findByEmail(String email);
+    Optional<Member> findByUsername(String username);
+
+    Optional<Member> findByEmail(String email);
 }
