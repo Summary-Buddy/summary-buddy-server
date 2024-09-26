@@ -3,7 +3,6 @@ package summarybuddy.server.member.controller;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import summarybuddy.server.common.dto.ApiResponse;
 import summarybuddy.server.common.type.success.MemberSuccessType;
@@ -38,8 +37,8 @@ public class MemberController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<SimpleMemberResponse>> search(@RequestParam("query") String query) {
+    public ApiResponse<List<SimpleMemberResponse>> search(@RequestParam("query") String query) {
         List<SimpleMemberResponse> response = memberService.findByUsernameLike(query);
-        return ResponseEntity.ok().body(response);
+        return ApiResponse.success(MemberSuccessType.SEARCH_USERNAME_SUCCESS, response);
     }
 }

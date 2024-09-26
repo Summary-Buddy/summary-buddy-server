@@ -6,7 +6,7 @@ import summarybuddy.server.common.exception.BaseException;
 import summarybuddy.server.common.type.ErrorType;
 import summarybuddy.server.common.type.SuccessType;
 
-@JsonPropertyOrder({"status", "code", "message", "data"})
+@JsonPropertyOrder({"status", "message", "data"})
 public record ApiResponse<T>(
         int status, String message, @JsonInclude(JsonInclude.Include.NON_NULL) T data) {
     public static ApiResponse<?> success(SuccessType successType) {

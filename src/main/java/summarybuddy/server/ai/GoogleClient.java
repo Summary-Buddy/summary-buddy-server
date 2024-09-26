@@ -25,6 +25,9 @@ import summarybuddy.server.ai.dto.request.RequestParts;
 import summarybuddy.server.ai.dto.request.SystemInstruction;
 import summarybuddy.server.ai.dto.response.ContentResponse;
 import summarybuddy.server.ai.dto.response.Parts;
+import summarybuddy.server.common.exception.InternalServerException;
+import summarybuddy.server.common.type.error.CommonErrorType;
+import summarybuddy.server.common.type.error.ReportErrorType;
 
 @Slf4j
 @Component
@@ -91,7 +94,8 @@ public class GoogleClient {
             }
             return resultBuilder.toString();
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            log.info("EXCEPTION: {}", e.getMessage());
+            throw new InternalServerException(CommonErrorType.INTERNAL_SERVER);
         }
     }
 
@@ -128,6 +132,6 @@ public class GoogleClient {
                 return parts.getFirst().text();
             }
         }
-        throw new RuntimeException("NO SUMMARY RESULT");
+        throw new InternalServerException(ReportErrorType.NO_SUMMARY_RESULT);
     }
 }
