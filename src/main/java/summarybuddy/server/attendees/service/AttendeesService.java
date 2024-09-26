@@ -7,8 +7,9 @@ import summarybuddy.server.attendees.repository.AttendeesRepository;
 import summarybuddy.server.attendees.repository.domain.Attendees;
 import summarybuddy.server.member.repository.MemberRepository;
 import summarybuddy.server.member.repository.domain.Member;
+import summarybuddy.server.report.dto.SimpleReport;
 import summarybuddy.server.report.dto.request.ReportCreateRequest;
-import summarybuddy.server.report.dto.response.ReportResponse;
+import summarybuddy.server.report.dto.response.SimpleReportResponse;
 import summarybuddy.server.report.repository.domain.Report;
 
 @Service
@@ -17,9 +18,9 @@ public class AttendeesService {
     private final MemberRepository memberRepository;
     private final AttendeesRepository attendeesRepository;
 
-    public List<ReportResponse> findReportsByMemberId(Long memberId) {
-        List<Attendees> attendees = attendeesRepository.findAllByMemberId(memberId);
-        return attendees.stream().map(item -> ReportResponse.of(item.getReport())).toList();
+    public List<SimpleReportResponse> findReportsByMemberId(Long memberId) {
+        List<SimpleReport> reports = attendeesRepository.findSimpleReportsByMemberId(memberId);
+        return reports.stream().map(SimpleReportResponse::of).toList();
     }
 
     public void save(Long memberId, Report report, ReportCreateRequest request) {
