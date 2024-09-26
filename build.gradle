@@ -5,15 +5,6 @@ plugins {
 	id 'com.diffplug.spotless' version '6.25.0'
 }
 
-spotless {
-	java {
-		trimTrailingWhitespace()
-		removeUnusedImports()
-		indentWithTabs()
-		endWithNewline()
-	}
-}
-
 group = 'summarybuddy'
 version = '0.0.1-SNAPSHOT'
 
@@ -52,6 +43,53 @@ dependencies {
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-impl:0.11.5'
 	implementation 'io.jsonwebtoken:jjwt-jackson:0.11.5' // JSON 파싱을 위해 Jackson 사용 시
+
+	// Google speech to text
+	implementation 'com.google.cloud:google-cloud-speech:4.43.0'
+
+	// Google Cloud Storage
+	implementation platform('com.google.cloud:libraries-bom:  26.48.0-SNAPSHOT')
+	implementation 'com.google.cloud:google-cloud-storage:2.43.0'
+
+	// QueryDSL
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+}
+
+def querydslDir = 'src/main/generated'
+
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslDir)
+}
+
+sourceSets {
+	main {
+		java {
+			srcDirs = ['src/main/java', querydslDir]
+		}
+	}
+}
+
+clean {
+	delete file(querydslDir)
+}
+
+spotless {
+	java {
+		targetExclude 'src/main/generated/**/*.java'
+		importOrder()
+		removeUnusedImports()
+		googleJavaFormat().aosp()
+
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+}
+
+tasks.named("spotlessJava") {
+	mustRunAfter tasks.named("compileJava")
 }
 
 tasks.named('test') {
