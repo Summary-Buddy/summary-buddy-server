@@ -36,7 +36,7 @@ public class MemberController {
 	@PatchMapping("/update")
 	public ResponseEntity<?> update(@Valid @RequestBody MemberUpdateRequest request) {
 		validationService.validateUpdateRequest(request);
-		memberService.updateMember(request.getMemberId(), request);
+		memberService.updateMember(request.getUsername(), request);
 		return ResponseEntity.ok().build();
 	}
 }

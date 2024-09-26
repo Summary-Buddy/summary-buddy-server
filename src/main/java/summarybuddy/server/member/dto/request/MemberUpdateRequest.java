@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class MemberUpdateRequest {
 
-    private Long memberId;
+    private String username;
 
     @Email(message = "Email should be valid")
     private String newEmail;

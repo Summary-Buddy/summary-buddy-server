@@ -31,8 +31,8 @@ public class MemberService {
 		memberRepository.save(member);
 	}
 
-	public void updateMember(Long memberId, MemberUpdateRequest request) {
-		Member member = memberRepository.findById(memberId)
+	public void updateMember(String username, MemberUpdateRequest request) {
+		Member member = memberRepository.findByUsername(username)
 				.orElseThrow(() -> new RuntimeException("Member not found"));
 
 		// 비밀번호 변경
