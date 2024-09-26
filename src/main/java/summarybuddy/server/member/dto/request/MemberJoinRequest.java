@@ -12,14 +12,9 @@ public class MemberJoinRequest {
     @NotBlank(message = "Username is required")
     private String username;
 
-<<<<<<< HEAD
 	@NotBlank
 	@Email(message = "Email should be valid")
 	private String email;
-=======
-    @Email(message = "Email should be valid")
-    private String email;
->>>>>>> main
 
     @NotBlank(message = "Password is required")
     // @Size(min = 8, message = "Password must be at least 8 characters")
@@ -30,15 +25,6 @@ public class MemberJoinRequest {
 
     // private String role;
 
-<<<<<<< HEAD
-	@Builder
-	public MemberJoinRequest(String username, String email, String password, String passwordConfirm) {
-		this.username = username;
-		this.email = email;
-		this.password = password;
-		this.passwordConfirm = passwordConfirm;
-	}
-=======
     @Builder
     public MemberJoinRequest(
             String username, String email, String password, String passwordConfirm) {
@@ -57,5 +43,4 @@ public class MemberJoinRequest {
     public boolean emailValidation() {
         return this.email != null && this.email.contains("@");
     }
->>>>>>> main
 }

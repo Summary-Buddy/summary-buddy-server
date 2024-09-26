@@ -60,19 +60,10 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         chain.doFilter(request, response); // 필터 체인 계속 진행
     }
-
-<<<<<<< HEAD
 	private Boolean checkPassUri(HttpServletRequest request) {
 		return request.getRequestURI().startsWith("/swagger-ui/**")
 				|| request.getRequestURI().startsWith("/api/member/join")
 				|| request.getRequestURI().startsWith("/api/member/check-username")
 				|| request.getRequestURI().startsWith("/login");
 	}
-=======
-    private Boolean checkPassUri(HttpServletRequest request) {
-        return request.getRequestURI().startsWith("/swagger-ui/**")
-                || request.getRequestURI().startsWith("/api/member/join")
-                || request.getRequestURI().startsWith("/login");
-    }
->>>>>>> main
 }
