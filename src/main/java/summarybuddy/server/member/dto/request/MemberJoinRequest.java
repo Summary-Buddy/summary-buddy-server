@@ -1,29 +1,25 @@
 package summarybuddy.server.member.dto.request;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
 
-@Getter
-@NoArgsConstructor
-public class MemberJoinRequest {
-    @NotBlank(message = "Username is required")
-    private String username;
-
-    @Email(message = "Email should be valid")
-    private String email;
-
-    @NotBlank(message = "Password is required")
-    // @Size(min = 8, message = "Password must be at least 8 characters")
-    private String password;
-
-    @NotBlank(message = "Password confirmation is required")
-    private String passwordConfirm;
-
-    // private String role;
-
+public record MemberJoinRequest(
+        @NotBlank(message = "Username is required")
+                @Schema(description = "로그인 시 사용할 ID", example = "summary_buddy123")
+                String username,
+        @NotBlank
+                @Email(message = "Email should be valid")
+                @Schema(description = "이메일", example = "summarybuddy@gmail.com")
+                String email,
+        @NotBlank(message = "Password is required")
+                // @Size(min = 8, message = "Password must be at least 8 characters")
+                @Schema(description = "비밀번호", example = "p@ssword")
+                String password,
+        @NotBlank(message = "Password confirmation is required")
+                @Schema(description = "비밀번호 확인", example = "p@ssword")
+                String passwordConfirm) {
     @Builder
     public MemberJoinRequest(
             String username, String email, String password, String passwordConfirm) {
@@ -31,15 +27,5 @@ public class MemberJoinRequest {
         this.email = email;
         this.password = password;
         this.passwordConfirm = passwordConfirm;
-    }
-
-    // 패스워드 확인 메서드
-    public boolean checkPassword() {
-        return this.password != null && this.password.equals(this.passwordConfirm);
-    }
-
-    // 이메일 형식 확인 메서드
-    public boolean emailValidation() {
-        return this.email != null && this.email.contains("@");
     }
 }

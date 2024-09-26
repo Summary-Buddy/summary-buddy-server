@@ -26,7 +26,7 @@ public class Member {
 
     @NotNull private String password;
 
-    // Enum으로 설정
+    // Enum 으로 설정
     @Enumerated(EnumType.STRING)
     private Role role;
 
@@ -36,6 +36,14 @@ public class Member {
         this.username = username;
         this.email = email;
         this.password = password;
-        this.role = role;
+        this.role = (role != null) ? role : Role.USER;
+    }
+
+    public void updatePassword(String newPassword) {
+        this.password = newPassword;
+    }
+
+    public void updateEmail(String newEmail) {
+        this.email = newEmail;
     }
 }

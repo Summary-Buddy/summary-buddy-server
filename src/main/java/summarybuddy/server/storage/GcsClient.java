@@ -8,10 +8,14 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
+import summarybuddy.server.common.exception.InternalServerException;
+import summarybuddy.server.common.type.error.CommonErrorType;
 
+@Slf4j
 @Component
 public class GcsClient {
     @Value("${google.ai.credential}")
@@ -28,7 +32,8 @@ public class GcsClient {
 
             return "gs://" + bucketName + "/" + objectName;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            log.info("EXCEPTION: {}", e.getMessage());
+            throw new InternalServerException(CommonErrorType.INTERNAL_SERVER);
         }
     }
 
@@ -40,7 +45,8 @@ public class GcsClient {
 
             return objectName;
         } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+            log.info("EXCEPTION: {}", e.getMessage());
+            throw new InternalServerException(CommonErrorType.INTERNAL_SERVER);
         }
     }
 

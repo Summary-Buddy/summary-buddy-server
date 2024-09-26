@@ -6,7 +6,10 @@ import summarybuddy.server.member.dto.SimpleMember;
 import summarybuddy.server.member.repository.domain.Member;
 
 public interface MemberRepository {
+
     Optional<Member> findByUsername(String username);
+
+    Optional<Member> findByEmail(String email);
 
     void save(Member member);
 

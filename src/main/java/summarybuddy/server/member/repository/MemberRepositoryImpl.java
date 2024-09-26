@@ -23,6 +23,16 @@ public class MemberRepositoryImpl implements MemberRepository {
     }
 
     @Override
+    public Optional<Member> findById(Long id) {
+        return memberJpaRepository.findById(id);
+    }
+
+    @Override
+    public Optional<Member> findByEmail(String email) {
+        return memberJpaRepository.findByEmail(email);
+    }
+
+    @Override
     public void save(Member member) {
         memberJpaRepository.save(member);
     }
@@ -30,11 +40,6 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public List<Member> findAllByMemberIds(List<Long> memberIds) {
         return queryFactory.selectFrom(member).where(member.id.in(memberIds)).fetch();
-    }
-
-    @Override
-    public Optional<Member> findById(Long id) {
-        return memberJpaRepository.findById(id);
     }
 
     @Override
