@@ -9,6 +9,7 @@ import summarybuddy.server.ai.GoogleClient;
 import summarybuddy.server.member.repository.MemberRepository;
 import summarybuddy.server.member.repository.domain.Member;
 import summarybuddy.server.report.dto.request.ReportCreateRequest;
+import summarybuddy.server.report.dto.response.ReportResponse;
 import summarybuddy.server.report.mapper.ReportMapper;
 import summarybuddy.server.report.repository.ReportRepository;
 import summarybuddy.server.report.repository.domain.Report;
@@ -33,5 +34,13 @@ public class ReportService {
         String summary = googleClient.getSummary(result, participants);
         Report report = ReportMapper.from(summary, audioUrl); // pdf file url로 변경 필요
         return reportRepository.save(report);
+    }
+
+    public ReportResponse findById(Long reportId) {
+        Report report =
+                reportRepository
+                        .findById(reportId)
+                        .orElseThrow(() -> new RuntimeException("REPORT NOT FOUND"));
+        return ReportResponse.of(report);
     }
 }

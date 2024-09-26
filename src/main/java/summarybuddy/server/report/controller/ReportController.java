@@ -9,6 +9,7 @@ import summarybuddy.server.attendees.service.AttendeesService;
 import summarybuddy.server.common.annotation.LoginMember;
 import summarybuddy.server.report.dto.request.ReportCreateRequest;
 import summarybuddy.server.report.dto.response.ReportResponse;
+import summarybuddy.server.report.dto.response.SimpleReportResponse;
 import summarybuddy.server.report.repository.domain.Report;
 import summarybuddy.server.report.service.ReportService;
 
@@ -30,8 +31,14 @@ public class ReportController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ReportResponse>> readAll(@LoginMember Long memberId) {
-        List<ReportResponse> response = attendeesService.findReportsByMemberId(memberId);
+    public ResponseEntity<List<SimpleReportResponse>> readAll(@LoginMember Long memberId) {
+        List<SimpleReportResponse> response = attendeesService.findReportsByMemberId(memberId);
+        return ResponseEntity.ok().body(response);
+    }
+
+    @GetMapping("/{reportId}")
+    public ResponseEntity<ReportResponse> read(@PathVariable("reportId") Long reportId) {
+        ReportResponse response = reportService.findById(reportId);
         return ResponseEntity.ok().body(response);
     }
 }
