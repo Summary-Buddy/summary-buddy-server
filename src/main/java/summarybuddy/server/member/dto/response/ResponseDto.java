@@ -9,6 +9,5 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class ResponseDto {
-    private boolean success;
     private String message;
 }

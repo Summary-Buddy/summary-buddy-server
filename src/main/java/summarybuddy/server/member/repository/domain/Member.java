@@ -39,7 +39,6 @@ public class Member {
 		this.role = (role != null) ? role : Role.USER;
 	}
 
-
 	public void updatePassword(String newPassword) {
 		this.password = newPassword;
 	}
