@@ -12,12 +12,12 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import org.springframework.util.StreamUtils;
 import summarybuddy.server.common.dto.JwtResponse;
 import summarybuddy.server.common.util.JwtUtil;
+import summarybuddy.server.member.repository.domain.CustomUserDetails;
 
 public class JsonUsernamePasswordAuthenticationFilter
         extends AbstractAuthenticationProcessingFilter {
@@ -67,7 +67,7 @@ public class JsonUsernamePasswordAuthenticationFilter
 
     protected void setDetails(
             HttpServletRequest request, UsernamePasswordAuthenticationToken authRequest) {
-        authRequest.setDetails(this.authenticationDetailsSource.buildDetails(request));
+        authRequest.setDetails(authenticationDetailsSource.buildDetails(request));
     }
 
     @Override
@@ -77,10 +77,10 @@ public class JsonUsernamePasswordAuthenticationFilter
             FilterChain chain,
             Authentication authResult)
             throws IOException, ServletException {
-        UserDetails customUserDetails = (UserDetails) authResult.getPrincipal();
+        CustomUserDetails customUserDetails = (CustomUserDetails) authResult.getPrincipal();
         String token = jwtUtil.generateToken(customUserDetails);
 
-        JwtResponse jwtResponseDto = new JwtResponse("Bearer " + token);
+        JwtResponse jwtResponseDto = new JwtResponse(customUserDetails.getId(), "Bearer " + token);
         String jwtResponse = objectMapper.writeValueAsString(jwtResponseDto);
         response.setHeader("Content-Type", "application/json");
         response.getWriter().write(jwtResponse);
