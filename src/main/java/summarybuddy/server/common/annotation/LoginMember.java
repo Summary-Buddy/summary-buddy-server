@@ -8,5 +8,5 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 @Target(ElementType.PARAMETER)
 @Retention(RetentionPolicy.RUNTIME)
-@AuthenticationPrincipal(expression = "username == null ? '' : username")
+@AuthenticationPrincipal(expression = "id == null ? 0L : id")
 public @interface LoginMember {}

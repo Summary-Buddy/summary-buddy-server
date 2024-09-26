@@ -48,7 +48,6 @@ dependencies {
 	implementation 'com.google.cloud:google-cloud-speech:4.43.0'
 
 	// Google Cloud Storage
-	implementation platform('com.google.cloud:libraries-bom:  26.48.0-SNAPSHOT')
 	implementation 'com.google.cloud:google-cloud-storage:2.43.0'
 
 	// QueryDSL
