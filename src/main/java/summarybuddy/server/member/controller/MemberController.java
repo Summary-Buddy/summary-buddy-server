@@ -14,11 +14,11 @@ import summarybuddy.server.member.service.MemberService;
 @RequiredArgsConstructor
 @RequestMapping("/api/member")
 public class MemberController {
-	private final MemberService memberService;
+    private final MemberService memberService;
 
-	@PostMapping("/join")
-	public ResponseEntity<?> join(@Valid @RequestBody MemberJoinRequest request) {
-		memberService.save(request);
-		return ResponseEntity.ok().build();
-	}
+    @PostMapping("/join")
+    public ResponseEntity<?> join(@Valid @RequestBody MemberJoinRequest request) {
+        memberService.save(request);
+        return ResponseEntity.ok().build();
+    }
 }
