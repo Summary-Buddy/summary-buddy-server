@@ -33,4 +33,8 @@ public class Report {
         this.fileDirectory = fileDirectory;
         this.createdAt = createdAt;
     }
+
+    public void updateFileDirectory(String pdfDirectory) {
+        this.fileDirectory = pdfDirectory;
+    }
 }

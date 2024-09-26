@@ -3,11 +3,10 @@ package summarybuddy.server.storage;
 import com.google.api.gax.core.CredentialsProvider;
 import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.auth.oauth2.ServiceAccountCredentials;
-import com.google.cloud.storage.BlobId;
-import com.google.cloud.storage.BlobInfo;
-import com.google.cloud.storage.Storage;
-import com.google.cloud.storage.StorageOptions;
+import com.google.cloud.storage.*;
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -23,24 +22,54 @@ public class GcsClient {
 
     public String createAudioUrl(MultipartFile file) {
         try {
-            CredentialsProvider credentialsProvider =
-                    FixedCredentialsProvider.create(
-                            ServiceAccountCredentials.fromStream(
-                                    new FileInputStream(googleAiCridential)));
-            Storage storage =
-                    StorageOptions.newBuilder()
-                            .setCredentials(credentialsProvider.getCredentials())
-                            .build()
-                            .getService();
+            Storage storage = getStorage();
             String objectName = "record/new-file-" + LocalDateTime.now().getNano();
-            BlobId blobId = BlobId.of(bucketName, objectName);
-            BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
-            Storage.BlobWriteOption precondition = Storage.BlobWriteOption.doesNotExist();
-            storage.createFrom(blobInfo, file.getInputStream(), precondition);
+            uploadObject(file.getInputStream(), objectName, storage);
 
             return "gs://" + bucketName + "/" + objectName;
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public String createPdfDirectory(InputStream input) {
+        try {
+            Storage storage = getStorage();
+            String objectName = "pdf/new-file-" + LocalDateTime.now().getNano();
+            uploadObject(input, objectName, storage);
+
+            return objectName;
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private Storage getStorage() throws IOException {
+        CredentialsProvider credentialsProvider =
+                FixedCredentialsProvider.create(
+                        ServiceAccountCredentials.fromStream(
+                                new FileInputStream(googleAiCridential)));
+        Storage storage =
+                StorageOptions.newBuilder()
+                        .setCredentials(credentialsProvider.getCredentials())
+                        .build()
+                        .getService();
+        return storage;
+    }
+
+    private void uploadObject(InputStream input, String objectName, Storage storage)
+            throws IOException {
+        BlobId blobId = BlobId.of(bucketName, objectName);
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+        Storage.BlobWriteOption precondition = Storage.BlobWriteOption.doesNotExist();
+        storage.createFrom(blobInfo, input, precondition);
+    }
+
+    public String getUrl(String fileDirectory) {
+        return "https://storage.cloud.google.com/"
+                + bucketName
+                + "/"
+                + fileDirectory
+                + "?authuser=3";
     }
 }

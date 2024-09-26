@@ -1,5 +1,6 @@
 package summarybuddy.server.report.controller;
 
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,8 @@ import org.springframework.web.multipart.MultipartFile;
 import summarybuddy.server.attendees.service.AttendeesService;
 import summarybuddy.server.common.annotation.LoginMember;
 import summarybuddy.server.report.dto.request.ReportCreateRequest;
+import summarybuddy.server.report.dto.request.ReportPdfCreateRequest;
+import summarybuddy.server.report.dto.response.ReportPdfCreateResponse;
 import summarybuddy.server.report.dto.response.ReportResponse;
 import summarybuddy.server.report.dto.response.SimpleReportResponse;
 import summarybuddy.server.report.repository.domain.Report;
@@ -40,5 +43,12 @@ public class ReportController {
     public ResponseEntity<ReportResponse> read(@PathVariable("reportId") Long reportId) {
         ReportResponse response = reportService.findById(reportId);
         return ResponseEntity.ok().body(response);
+    }
+
+    @PostMapping("/pdf")
+    public ResponseEntity<ReportPdfCreateResponse> createPdf(
+            @Valid @RequestBody ReportPdfCreateRequest request) {
+        ReportPdfCreateResponse pdfUrl = reportService.createPdfUrl(request);
+        return ResponseEntity.ok().body(pdfUrl);
     }
 }
