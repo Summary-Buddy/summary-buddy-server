@@ -8,9 +8,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import summarybuddy.server.common.dto.ApiResponse;
 import summarybuddy.server.common.type.success.MemberSuccessType;
-import summarybuddy.server.member.dto.request.MemberJoinRequest;
-import summarybuddy.server.member.dto.request.MemberUpdateRequest;
-import summarybuddy.server.member.dto.request.UsernameCheckRequest;
+import summarybuddy.server.member.dto.request.*;
+import summarybuddy.server.member.dto.response.MemberDetailResponse;
 import summarybuddy.server.member.dto.response.SimpleMemberResponse;
 import summarybuddy.server.member.service.MemberService;
 
@@ -47,5 +46,26 @@ public class MemberController {
     public ApiResponse<List<SimpleMemberResponse>> search(@RequestParam("query") String query) {
         List<SimpleMemberResponse> response = memberService.findByUsernameLike(query);
         return ApiResponse.success(MemberSuccessType.SEARCH_USERNAME_SUCCESS, response);
+    }
+
+    @PatchMapping("/email-update")
+    @Operation(summary = "회원 이메일 수정")
+    public ApiResponse<?> updateEmail(@Valid @RequestBody MemberEmailUpdateRequest request) {
+        memberService.updateEmail(request);
+        return ApiResponse.success(MemberSuccessType.UPDATE_EMAIL_SUCCESS);
+    }
+
+    @PatchMapping("/password-update")
+    @Operation(summary = "회원 비밀번호 수정")
+    public ApiResponse<?> updateEmail(@Valid @RequestBody MemberPasswordUpdateRequest request) {
+        memberService.updatePassword(request);
+        return ApiResponse.success(MemberSuccessType.UPDATE_PASSWORD_SUCCESS);
+    }
+
+    @GetMapping("/{memberId}")
+    @Operation(summary = "회원 정보 조회")
+    public ApiResponse<MemberDetailResponse> get(@PathVariable("memberId") Long id) {
+        MemberDetailResponse response = memberService.findById(id);
+        return ApiResponse.success(MemberSuccessType.GET_DETAIL_SUCCESS, response);
     }
 }
