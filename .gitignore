@@ -6,6 +6,7 @@ build/
 !**/src/test/**/build/
 **/application-secret.properties
 /src/main/generated/
+**/arcane-bus-436701-d1-94e3c0514209.json
 
 ### STS ###
 .apt_generated
