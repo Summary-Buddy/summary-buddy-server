@@ -2,11 +2,13 @@ package summarybuddy.server.member.repository;
 
 import static summarybuddy.server.member.repository.domain.QMember.member;
 
+import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import summarybuddy.server.member.dto.SimpleMember;
 import summarybuddy.server.member.repository.domain.Member;
 
 @Repository
@@ -33,5 +35,18 @@ public class MemberRepositoryImpl implements MemberRepository {
     @Override
     public Optional<Member> findById(Long id) {
         return memberJpaRepository.findById(id);
+    }
+
+    @Override
+    public List<SimpleMember> findByUsernameLike(String username) {
+        return queryFactory
+                .select(
+                        Projections.constructor(
+                                SimpleMember.class,
+                                member.id.as("id"),
+                                member.username.as("username")))
+                .from(member)
+                .where(member.username.contains(username))
+                .fetch();
     }
 }
