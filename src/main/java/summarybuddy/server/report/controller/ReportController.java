@@ -34,4 +34,10 @@ public class ReportController {
         List<ReportResponse> response = attendeesService.findReportsByMemberId(memberId);
         return ResponseEntity.ok().body(response);
     }
+
+    @GetMapping("/{reportId}")
+    public ResponseEntity<ReportResponse> read(@PathVariable("reportId") Long reportId) {
+        ReportResponse response = reportService.findById(reportId);
+        return ResponseEntity.ok().body(response);
+    }
 }
