@@ -18,8 +18,8 @@ public class Report {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(columnDefinition = "TEXT")
     @NotNull
+    @Column(columnDefinition = "TEXT")
     private String content;
 
     @Column @NotNull private String fileDirectory;
