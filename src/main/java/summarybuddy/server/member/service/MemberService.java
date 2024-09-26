@@ -1,13 +1,16 @@
 package summarybuddy.server.member.service;
 
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import summarybuddy.server.common.exception.NotFoundException;
 import summarybuddy.server.common.type.error.MemberErrorType;
+import summarybuddy.server.member.dto.SimpleMember;
 import summarybuddy.server.member.dto.request.MemberJoinRequest;
 import summarybuddy.server.member.dto.request.MemberUpdateRequest;
+import summarybuddy.server.member.dto.response.SimpleMemberResponse;
 import summarybuddy.server.member.mapper.MemberMapper;
 import summarybuddy.server.member.repository.MemberRepository;
 import summarybuddy.server.member.repository.domain.Member;
@@ -55,5 +58,10 @@ public class MemberService {
 
     public void checkUsername(String username) {
         validationUtil.validateUsername(username);
+    }
+
+    public List<SimpleMemberResponse> findByUsernameLike(String username) {
+        List<SimpleMember> members = memberRepository.findByUsernameLike(username);
+        return members.stream().map(SimpleMemberResponse::of).toList();
     }
 }
