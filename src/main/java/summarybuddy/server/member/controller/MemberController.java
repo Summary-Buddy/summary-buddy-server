@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import summarybuddy.server.member.dto.request.MemberJoinRequest;
 import summarybuddy.server.member.dto.request.MemberUpdateRequest;
 import summarybuddy.server.member.dto.request.UsernameCheckRequest;
+import summarybuddy.server.member.dto.response.ResponseDto;
 import summarybuddy.server.member.service.MemberService;
 import summarybuddy.server.member.service.ValidationService;
 
@@ -34,9 +35,13 @@ public class MemberController {
 	}
 
 	@PatchMapping("/update")
-	public ResponseEntity<?> update(@Valid @RequestBody MemberUpdateRequest request) {
-		validationService.validateUpdateRequest(request);
-		memberService.updateMember(request.getUsername(), request);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<ResponseDto> update(@Valid @RequestBody MemberUpdateRequest request) {
+		try {
+			validationService.validateUpdateRequest(request);
+			memberService.updateMember(request.getUsername(), request);
+			return ResponseEntity.ok(new ResponseDto(true, "회원 정보가 성공적으로 수정되었습니다."));
+		} catch (Exception e) {
+			return ResponseEntity.badRequest().body(new ResponseDto(false, e.getMessage()));
+		}
 	}
 }

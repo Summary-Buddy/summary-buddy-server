@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class MemberUpdateRequest {
-
+    @NotBlank(message = "Username is required")
     private String username;
 
     @Email(message = "Email should be valid")

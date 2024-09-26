@@ -45,7 +45,7 @@ public class SecurityConfig {
 				// Swagger
 				.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 				.authorizeHttpRequests(auth ->
-						auth.requestMatchers("/swagger-ui/**", "/v3/**", "/error", "/api/member/join", "/api/member/check-username").permitAll()
+						auth.requestMatchers("/swagger-ui/**", "/v3/**", "/error", "/api/member/join").permitAll()
 								.anyRequest().authenticated()
 				);
 
