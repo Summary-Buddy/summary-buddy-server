@@ -11,24 +11,24 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 public class Member {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@NotNull
-	private String username;
+    @NotNull
+    @Column(unique = true)
+    private String username;
 
-	@Email
-	@NotNull
-	@Column(unique = true)
-	private String email;
+    @Email
+    @NotNull
+    @Column(unique = true)
+    private String email;
 
-	@NotNull
-	private String password;
+    @NotNull private String password;
 
-	// Enum으로 설정
-	@Enumerated(EnumType.STRING)
-	private Role role;
+    // Enum 으로 설정
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 	@Builder
 	public Member(Long id, String username, String email, String password, Role role) {
