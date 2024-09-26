@@ -11,5 +11,4 @@ import lombok.RequiredArgsConstructor;
 public class ResponseDto {
     private boolean success;
     private String message;
-
 }

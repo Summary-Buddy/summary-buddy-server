@@ -24,24 +24,17 @@ public class MemberController {
 		return ResponseEntity.ok().build();
 	}
 
+
 	@PostMapping("/check-username")
 	public ResponseEntity<Boolean> checkUsername(@Valid @RequestBody UsernameCheckRequest request) {
-		try {
-			validationService.validateUsername(request.getUsername());
-			return ResponseEntity.ok(false); // 존재 X = false
-		} catch (RuntimeException e) {
-			return ResponseEntity.ok(true); // 존재 = ture
-		}
+		validationService.validateUsername(request.getUsername());
+		return ResponseEntity.ok(false); // 존재 X = false
 	}
 
 	@PatchMapping("/update")
 	public ResponseEntity<ResponseDto> update(@Valid @RequestBody MemberUpdateRequest request) {
-		try {
-			validationService.validateUpdateRequest(request);
-			memberService.updateMember(request.getUsername(), request);
-			return ResponseEntity.ok(new ResponseDto(true, "회원 정보가 성공적으로 수정되었습니다."));
-		} catch (Exception e) {
-			return ResponseEntity.badRequest().body(new ResponseDto(false, e.getMessage()));
-		}
+		validationService.validateUpdateRequest(request);
+		memberService.updateMember(request.getUsername(), request);
+		return ResponseEntity.ok(new ResponseDto(true, "회원 정보가 성공적으로 수정되었습니다."));
 	}
 }

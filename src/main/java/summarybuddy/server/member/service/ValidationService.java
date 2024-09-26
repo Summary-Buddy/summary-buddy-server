@@ -2,6 +2,7 @@ package summarybuddy.server.member.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import summarybuddy.server.exception.UsernameAlreadyExistsException;
 import summarybuddy.server.member.dto.request.MemberUpdateRequest;
 import summarybuddy.server.member.repository.MemberRepository;
 
@@ -12,7 +13,7 @@ public class ValidationService {
 
     public void validateUsername(String username) {
         if (memberRepository.findByUsername(username).isPresent()) {
-            throw new RuntimeException("Username already exists");
+            throw new UsernameAlreadyExistsException("Username '" + username + "' already exists.");
         }
     }
 
