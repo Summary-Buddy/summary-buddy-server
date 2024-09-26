@@ -1,5 +1,7 @@
 package summarybuddy.server.report.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,7 @@ import summarybuddy.server.report.repository.domain.Report;
 import summarybuddy.server.report.service.ReportService;
 
 @RestController
+@Tag(name = "회의록")
 @RequiredArgsConstructor
 @RequestMapping("/api/report")
 public class ReportController {
@@ -25,6 +28,7 @@ public class ReportController {
     private final AttendeesService attendeesService;
 
     @PostMapping
+    @Operation(summary = "회의 녹음을 토대로 요약된 회의록 생성")
     public ApiResponse<?> create(
             @LoginMember Long memberId,
             @RequestPart("file") MultipartFile file,
@@ -35,18 +39,21 @@ public class ReportController {
     }
 
     @GetMapping
+    @Operation(summary = "회원이 참여한 회의록 목록 조회")
     public ApiResponse<List<SimpleReportResponse>> readAll(@LoginMember Long memberId) {
         List<SimpleReportResponse> response = attendeesService.findReportsByMemberId(memberId);
         return ApiResponse.success(ReportSuccessType.GET_LIST_SUCCESS, response);
     }
 
     @GetMapping("/{reportId}")
+    @Operation(summary = "회의록 단건 조회")
     public ApiResponse<ReportResponse> read(@PathVariable("reportId") Long reportId) {
         ReportResponse response = reportService.findById(reportId);
         return ApiResponse.success(ReportSuccessType.GET_SUCCESS, response);
     }
 
     @PostMapping("/pdf")
+    @Operation(summary = "회의록 PDF 다운로드 링크 조회")
     public ApiResponse<ReportPdfCreateResponse> createPdf(
             @Valid @RequestBody ReportPdfCreateRequest request) {
         ReportPdfCreateResponse pdfUrl = reportService.createPdfUrl(request);
