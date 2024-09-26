@@ -11,19 +11,20 @@ import summarybuddy.server.member.repository.domain.Member;
 @Service
 @RequiredArgsConstructor
 public class MemberService {
-	private final MemberRepository memberRepository;
-	private final PasswordEncoder passwordEncoder;
+    private final MemberRepository memberRepository;
+    private final PasswordEncoder passwordEncoder;
 
-	public void save(MemberJoinRequest request) {
-		if (memberRepository.findByUsername(request.getUsername()).isPresent()) {
-			throw new RuntimeException("Username already exists");
-		} else if (!request.emailValidation()) {
-			throw new RuntimeException("Email is not valid");
-		} else if (!request.checkPassword()) {
-			throw new RuntimeException("Passwords do not match");
-		} else {
-			Member member = MemberMapper.from(request, passwordEncoder.encode(request.getPassword()));
-			memberRepository.save(member);
-		}
-	}
+    public void save(MemberJoinRequest request) {
+        if (memberRepository.findByUsername(request.getUsername()).isPresent()) {
+            throw new RuntimeException("Username already exists");
+        } else if (!request.emailValidation()) {
+            throw new RuntimeException("Email is not valid");
+        } else if (!request.checkPassword()) {
+            throw new RuntimeException("Passwords do not match");
+        } else {
+            Member member =
+                    MemberMapper.from(request, passwordEncoder.encode(request.getPassword()));
+            memberRepository.save(member);
+        }
+    }
 }
