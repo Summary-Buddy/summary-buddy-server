@@ -1,12 +1,10 @@
 package summarybuddy.server.report.controller;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import summarybuddy.server.common.annotation.LoginMember;
 import summarybuddy.server.report.dto.request.ReportCreateRequest;
 import summarybuddy.server.report.service.ReportService;
 
@@ -14,10 +12,14 @@ import summarybuddy.server.report.service.ReportService;
 @RequiredArgsConstructor
 @RequestMapping("/api/report")
 public class ReportController {
-	private final ReportService reportService;
+    private final ReportService reportService;
 
-	@PostMapping
-	public ResponseEntity<?> create(@Valid @RequestBody ReportCreateRequest request) {
-		return ResponseEntity.ok().build();
-	}
+    @PostMapping
+    public ResponseEntity<?> create(
+            @LoginMember String username,
+            @RequestPart("file") MultipartFile file,
+            @RequestPart("content") ReportCreateRequest request) {
+        reportService.save(username, file, request);
+        return ResponseEntity.ok().build();
+    }
 }
