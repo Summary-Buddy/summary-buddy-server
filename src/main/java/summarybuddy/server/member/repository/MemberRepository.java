@@ -2,6 +2,7 @@ package summarybuddy.server.member.repository;
 
 import java.util.List;
 import java.util.Optional;
+import summarybuddy.server.member.dto.SimpleMember;
 import summarybuddy.server.member.repository.domain.Member;
 
 public interface MemberRepository {
@@ -12,4 +13,6 @@ public interface MemberRepository {
     List<Member> findAllByMemberIds(List<Long> memberIds);
 
     Optional<Member> findById(Long id);
+
+    List<SimpleMember> findByUsernameLike(String username);
 }
