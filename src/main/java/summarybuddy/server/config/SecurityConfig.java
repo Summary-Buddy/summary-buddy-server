@@ -43,7 +43,7 @@ public class SecurityConfig {
                                                             "http://localhost:3000"));
                                             config.setAllowedOrigins(
                                                     Collections.singletonList(
-                                                            "http://15.164.225.113"));
+                                                            "http://15.164.225.113:8080"));
                                             config.setAllowedMethods(
                                                     Arrays.asList(
                                                             "GET", "POST", "PUT", "DELETE", "PATCH",
