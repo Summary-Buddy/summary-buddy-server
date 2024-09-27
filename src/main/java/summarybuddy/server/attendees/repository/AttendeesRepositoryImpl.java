@@ -11,6 +11,7 @@ import com.querydsl.jpa.impl.JPAQueryFactory;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
+import summarybuddy.server.attendees.dto.AttendeesAndReportIds;
 import summarybuddy.server.attendees.repository.domain.Attendees;
 import summarybuddy.server.report.dto.SimpleReport;
 
@@ -56,5 +57,89 @@ public class AttendeesRepositoryImpl implements AttendeesRepository {
                 .join(attendees.member, member)
                 .where(attendees.member.id.eq(memberId))
                 .fetch();
+    }
+
+    @Override
+    public void deleteAllById(List<Long> attendeesIds) {
+        attendeesJpaRepository.deleteAllById(attendeesIds);
+    }
+
+    @Override
+    public AttendeesAndReportIds findAllIdsByMemberId(Long id) {
+        List<Attendees> attendeesList1 =
+                queryFactory
+                        .selectFrom(attendees)
+                        .join(attendees.member, member)
+                        .fetchJoin()
+                        .where(attendees.member.id.eq(id))
+                        .fetch();
+        List<Attendees> attendeesList2 =
+                queryFactory
+                        .selectFrom(attendees)
+                        .join(attendees.report, report)
+                        .fetchJoin()
+                        .join(attendees.member, member)
+                        .fetchJoin()
+                        .where(
+                                attendees
+                                        .member
+                                        .id
+                                        .eq(id)
+                                        .and(
+                                                attendees.report.id.notIn(
+                                                        queryFactory
+                                                                .selectFrom(attendees)
+                                                                .join(attendees.report, report)
+                                                                .fetchJoin()
+                                                                .join(attendees.member, member)
+                                                                .fetchJoin()
+                                                                .where(
+                                                                        attendees
+                                                                                .member
+                                                                                .id
+                                                                                .ne(id)
+                                                                                .and(
+                                                                                        attendees
+                                                                                                .report
+                                                                                                .id
+                                                                                                .in(
+                                                                                                        queryFactory
+                                                                                                                .selectFrom(
+                                                                                                                        attendees)
+                                                                                                                .join(
+                                                                                                                        attendees
+                                                                                                                                .report,
+                                                                                                                        report)
+                                                                                                                .fetchJoin()
+                                                                                                                .join(
+                                                                                                                        attendees
+                                                                                                                                .member,
+                                                                                                                        member)
+                                                                                                                .fetchJoin()
+                                                                                                                .where(
+                                                                                                                        attendees
+                                                                                                                                .member
+                                                                                                                                .id
+                                                                                                                                .eq(
+                                                                                                                                        id))
+                                                                                                                .fetch()
+                                                                                                                .stream()
+                                                                                                                .map(
+                                                                                                                        item ->
+                                                                                                                                item.getReport()
+                                                                                                                                        .getId())
+                                                                                                                .toList())))
+                                                                .fetch()
+                                                                .stream()
+                                                                .map(
+                                                                        item ->
+                                                                                item.getReport()
+                                                                                        .getId())
+                                                                .toList())))
+                        .fetch();
+        List<Long> attendeesIds = attendeesList1.stream().map(Attendees::getId).toList();
+        List<Long> reportIds =
+                attendeesList2.stream().map(item -> item.getReport().getId()).toList();
+        return new AttendeesAndReportIds(attendeesIds, reportIds);
     }
 }

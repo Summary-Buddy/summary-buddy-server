@@ -2,11 +2,11 @@ package summarybuddy.server.member.service;
 
 import jakarta.transaction.Transactional;
 import java.util.List;
-
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import summarybuddy.server.attendees.dto.AttendeesAndReportIds;
+import summarybuddy.server.attendees.repository.AttendeesRepository;
 import summarybuddy.server.common.exception.NotFoundException;
 import summarybuddy.server.common.type.error.MemberErrorType;
 import summarybuddy.server.member.dto.SimpleMember;
@@ -19,6 +19,7 @@ import summarybuddy.server.member.dto.response.SimpleMemberResponse;
 import summarybuddy.server.member.mapper.MemberMapper;
 import summarybuddy.server.member.repository.MemberRepository;
 import summarybuddy.server.member.repository.domain.Member;
+import summarybuddy.server.report.repository.ReportRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -26,6 +27,8 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final ValidationUtil validationUtil;
+    private final ReportRepository reportRepository;
+    private final AttendeesRepository attendeesRepository;
 
     @Transactional
     public void save(MemberJoinRequest request) {
@@ -89,7 +92,18 @@ public class MemberService {
     }
 
     private Member getMemberById(Long id) {
-        return memberRepository.findById(id)
+        return memberRepository
+                .findById(id)
                 .orElseThrow(() -> new NotFoundException(MemberErrorType.NOT_FOUND));
+    }
+
+    @Transactional
+    public void deleteById(Long id) {
+        AttendeesAndReportIds idObject = attendeesRepository.findAllIdsByMemberId(id);
+        List<Long> attendeesIds = idObject.attendeesIds();
+        List<Long> reportIds = idObject.reportIds();
+        attendeesRepository.deleteAllById(attendeesIds);
+        reportRepository.deleteAllById(reportIds);
+        memberRepository.deleteById(id);
     }
 }
