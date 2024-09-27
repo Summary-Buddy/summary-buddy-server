@@ -39,11 +39,7 @@ public class SecurityConfig {
                                         request -> {
                                             CorsConfiguration config = new CorsConfiguration();
                                             config.setAllowedOrigins(
-                                                    Collections.singletonList(
-                                                            "http://localhost:3000"));
-                                            config.setAllowedOrigins(
-                                                    Collections.singletonList(
-                                                            "http://15.164.225.113:8080"));
+                                                    Collections.singletonList("*"));
                                             config.setAllowedMethods(
                                                     Arrays.asList(
                                                             "GET", "POST", "PUT", "DELETE", "PATCH",
