@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import summarybuddy.server.common.annotation.LoginMember;
 import summarybuddy.server.common.dto.ApiResponse;
 import summarybuddy.server.common.type.success.MemberSuccessType;
 import summarybuddy.server.member.dto.request.*;
@@ -67,5 +68,12 @@ public class MemberController {
     public ApiResponse<MemberDetailResponse> get(@PathVariable("memberId") Long id) {
         MemberDetailResponse response = memberService.findById(id);
         return ApiResponse.success(MemberSuccessType.GET_DETAIL_SUCCESS, response);
+    }
+
+    @DeleteMapping
+    @Operation(summary = "회원 탈퇴")
+    public ApiResponse<?> delete(@LoginMember Long id) {
+        memberService.deleteById(id);
+        return ApiResponse.success(MemberSuccessType.DELETE_SUCCESS);
     }
 }

@@ -18,4 +18,6 @@ public interface MemberRepository {
     Optional<Member> findById(Long id);
 
     List<SimpleMember> findByUsernameLike(String username);
+
+    void deleteById(Long id);
 }

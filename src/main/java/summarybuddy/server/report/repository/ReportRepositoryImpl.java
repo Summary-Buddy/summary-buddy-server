@@ -1,5 +1,6 @@
 package summarybuddy.server.report.repository;
 
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
@@ -18,5 +19,10 @@ public class ReportRepositoryImpl implements ReportRepository {
     @Override
     public Optional<Report> findById(Long reportId) {
         return reportJpaRepository.findById(reportId);
+    }
+
+    @Override
+    public void deleteAllById(List<Long> reportIds) {
+        reportJpaRepository.deleteAllById(reportIds);
     }
 }

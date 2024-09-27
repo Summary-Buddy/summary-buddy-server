@@ -54,4 +54,9 @@ public class MemberRepositoryImpl implements MemberRepository {
                 .where(member.username.contains(username))
                 .fetch();
     }
+
+    @Override
+    public void deleteById(Long id) {
+        memberJpaRepository.deleteById(id);
+    }
 }
