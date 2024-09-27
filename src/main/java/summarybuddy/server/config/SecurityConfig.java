@@ -41,6 +41,9 @@ public class SecurityConfig {
                                             config.setAllowedOrigins(
                                                     Collections.singletonList(
                                                             "http://localhost:3000"));
+                                            config.setAllowedOrigins(
+                                                    Collections.singletonList(
+                                                            "http://15.164.225.113"));
                                             config.setAllowedMethods(
                                                     Arrays.asList(
                                                             "GET", "POST", "PUT", "DELETE", "PATCH",
