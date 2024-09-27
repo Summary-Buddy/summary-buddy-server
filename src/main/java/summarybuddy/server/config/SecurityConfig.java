@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Arrays;
 import java.util.Collections;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -29,6 +30,9 @@ public class SecurityConfig {
     private final JwtRequestFilter jwtRequestFilter;
     private final AuthenticationConfiguration authenticationConfiguration;
 
+    @Value("${client.url}")
+    private String clientUrl;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
@@ -39,7 +43,7 @@ public class SecurityConfig {
                                         request -> {
                                             CorsConfiguration config = new CorsConfiguration();
                                             config.setAllowedOrigins(
-                                                    Collections.singletonList("*"));
+                                                    Collections.singletonList(clientUrl));
                                             config.setAllowedMethods(
                                                     Arrays.asList(
                                                             "GET", "POST", "PUT", "DELETE", "PATCH",
