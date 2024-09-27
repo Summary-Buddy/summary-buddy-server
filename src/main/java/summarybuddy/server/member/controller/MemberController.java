@@ -69,7 +69,7 @@ public class MemberController {
         return ApiResponse.success(MemberSuccessType.GET_DETAIL_SUCCESS, response);
     }
 
-    @PostMapping("/password-reset")
+    @PostMapping("/reset-password")
     @Operation(summary = "비밀번호 찾기")
     public ApiResponse<?> resetPassword(@Valid @RequestBody MemberPasswordFindRequest request) {
         memberService.resetPassword(request);

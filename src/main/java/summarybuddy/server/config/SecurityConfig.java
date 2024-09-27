@@ -59,7 +59,9 @@ public class SecurityConfig {
                                                 "/swagger-ui/**",
                                                 "/v3/**",
                                                 "/error",
-                                                "/api/member/join")
+                                                "/api/member/join",
+                                                "/api/member/check-username",
+                                                "/api/member/reset-password")
                                         .permitAll()
                                         .anyRequest()
                                         .authenticated());

@@ -17,6 +17,18 @@ spring:
       max-file-size: 100GB
       max-request-size: 100GB
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${GOOGLE_EMAIL}
+    password: ${GOOGLE_PW}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 google:
   ai:
     credential: ${GOOGLE_AI_CREDENTIAL_PATH}
