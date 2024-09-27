@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import summarybuddy.server.attendees.service.AttendeesService;
@@ -27,7 +28,7 @@ public class ReportController {
     private final ReportService reportService;
     private final AttendeesService attendeesService;
 
-    @PostMapping
+    @PostMapping(consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
     @Operation(summary = "회의 녹음을 토대로 요약된 회의록 생성")
     public ApiResponse<?> create(
             @LoginMember Long memberId,
