@@ -68,4 +68,11 @@ public class MemberController {
         MemberDetailResponse response = memberService.findById(id);
         return ApiResponse.success(MemberSuccessType.GET_DETAIL_SUCCESS, response);
     }
+
+    @PostMapping("/password-reset")
+    @Operation(summary = "비밀번호 찾기")
+    public ApiResponse<?> resetPassword(@Valid @RequestBody MemberPasswordFindRequest request) {
+        memberService.resetPassword(request);
+        return ApiResponse.success(MemberSuccessType.SEND_TEMPORARY_PASSWORD_SUCCESS);
+    }
 }

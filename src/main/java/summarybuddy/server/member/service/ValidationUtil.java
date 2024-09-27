@@ -5,8 +5,13 @@ import org.springframework.stereotype.Service;
 import summarybuddy.server.common.exception.BadRequestException;
 import summarybuddy.server.common.exception.UsernameAlreadyExistsException;
 import summarybuddy.server.common.type.error.MemberErrorType;
+import summarybuddy.server.member.dto.request.MemberPasswordFindRequest;
 import summarybuddy.server.member.dto.request.MemberUpdateRequest;
 import summarybuddy.server.member.repository.MemberRepository;
+import summarybuddy.server.member.repository.domain.Member;
+
+import java.util.Optional;
+import java.util.prefs.BackingStoreException;
 
 @Service
 @RequiredArgsConstructor
@@ -49,6 +54,23 @@ public class ValidationUtil {
         }
         if (request.newPassword() != null) {
             validatePassword(request.newPassword(), request.newPasswordConfirm());
+        }
+    }
+
+    public void validatePasswordResetRequest(MemberPasswordFindRequest request) {
+        if (request.username() == null || request.email() == null) {
+            throw new BadRequestException(MemberErrorType.USERNAME_AND_EMAIL_MUST_BE_PROVIDED);
+        }
+
+        if (memberRepository.findByUsername(request.username()).isEmpty()) {
+            throw new BadRequestException(MemberErrorType.NOT_FOUND);
+        }
+
+        Optional<Member> memberByUsername = memberRepository.findByUsername(request.username());
+        Optional<Member> memberByEmail = memberRepository.findByEmail(request.email());
+
+        if (memberByUsername.isEmpty() || memberByEmail.isEmpty() || !memberByUsername.get().getId().equals(memberByEmail.get().getId())) {
+            throw new BadRequestException(MemberErrorType.NOT_FOUND);
         }
     }
 }

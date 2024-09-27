@@ -10,10 +10,7 @@ import org.springframework.stereotype.Service;
 import summarybuddy.server.common.exception.NotFoundException;
 import summarybuddy.server.common.type.error.MemberErrorType;
 import summarybuddy.server.member.dto.SimpleMember;
-import summarybuddy.server.member.dto.request.MemberEmailUpdateRequest;
-import summarybuddy.server.member.dto.request.MemberJoinRequest;
-import summarybuddy.server.member.dto.request.MemberPasswordUpdateRequest;
-import summarybuddy.server.member.dto.request.MemberUpdateRequest;
+import summarybuddy.server.member.dto.request.*;
 import summarybuddy.server.member.dto.response.MemberDetailResponse;
 import summarybuddy.server.member.dto.response.SimpleMemberResponse;
 import summarybuddy.server.member.mapper.MemberMapper;
@@ -26,6 +23,7 @@ public class MemberService {
     private final MemberRepository memberRepository;
     private final PasswordEncoder passwordEncoder;
     private final ValidationUtil validationUtil;
+    private final EmailService emailService;
 
     @Transactional
     public void save(MemberJoinRequest request) {
@@ -91,5 +89,16 @@ public class MemberService {
     private Member getMemberById(Long id) {
         return memberRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException(MemberErrorType.NOT_FOUND));
+    }
+
+    @Transactional
+    public void resetPassword(MemberPasswordFindRequest request){
+        Member member = memberRepository.findByUsername(request.username())
+                .orElseThrow(() -> new NotFoundException(MemberErrorType.NOT_FOUND));
+        validationUtil.validatePasswordResetRequest(request);
+
+        String tempPassword = PasswordUtil.generateTemporaryPassword();
+        member.updatePassword(passwordEncoder.encode(tempPassword));
+        emailService.sendTemporaryPasswordEmail(member.getEmail(), tempPassword);
     }
 }

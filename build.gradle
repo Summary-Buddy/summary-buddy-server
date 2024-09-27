@@ -58,6 +58,9 @@ dependencies {
 
 	// iText pdf
 	implementation 'com.itextpdf:itextpdf:5.5.13.4'
+
+	// Email sender
+	implementation 'org.springframework.boot:spring-boot-starter-mail'
 }
 
 def querydslDir = 'src/main/generated'
