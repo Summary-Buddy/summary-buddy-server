@@ -11,4 +11,4 @@ services:
       - '8080:8080'
     env_file: .env
     volumes:
-      - ./arcane-bus-436701-d1-94e3c0514209.json:/app/
+      - ./arcane-bus-436701-d1-94e3c0514209.json:/app/arcane-bus-436701-d1-94e3c0514209.json
