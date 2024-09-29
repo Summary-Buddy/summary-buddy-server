@@ -2,7 +2,7 @@ name: production Deploy
 on:
   push:
     branches:
-      - deploy/cicd
+      - main
 env:
   DOCKERHUB_USERNAME: ywonchae1
   DOCKERHUB_IMAGE_NAME: summarybuddy-server
