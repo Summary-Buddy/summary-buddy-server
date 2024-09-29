@@ -8,7 +8,8 @@ import com.google.cloud.speech.v1.*;
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.util.List;
-import javax.sound.sampled.AudioFileFormat;
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -55,7 +56,13 @@ public class GoogleClient {
             byte[] audioBytes = file.getBytes();
             //            ByteString audioData = ByteString.copyFrom(audioBytes);
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audioBytes);
-            AudioFileFormat format = AudioSystem.getAudioFileFormat(byteArrayInputStream);
+            AudioFormat audioFormat =
+                    new AudioFormat(
+                            AudioFormat.Encoding.PCM_FLOAT, 16000.0F, 32, 1, 4, 16000.0F, false);
+            AudioInputStream format =
+                    AudioSystem.getAudioInputStream(
+                            audioFormat,
+                            new AudioInputStream(byteArrayInputStream, audioFormat, 1L));
             log.info("Audio Format: {}", format.getFormat());
 
             RecognitionAudio recognitionAudio =
