@@ -24,4 +24,6 @@ google:
   storage:
     bucket-name: ${GOOGLE_BUCKET_NAME}
 
+client.url: ${CLIENT_URL}
+
 #logging.level.root: DEBUG
