@@ -24,15 +24,15 @@ import summarybuddy.server.report.dto.response.ReportResponse;
 import summarybuddy.server.report.mapper.ReportMapper;
 import summarybuddy.server.report.repository.ReportRepository;
 import summarybuddy.server.report.repository.domain.Report;
+import summarybuddy.server.storage.FFmpegClient;
 import summarybuddy.server.storage.GcsClient;
-import summarybuddy.server.storage.Jave2Client;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class ReportService {
     private final GcsClient gcsClient;
-    private final Jave2Client jave2Client;
+    private final FFmpegClient ffmpegClient;
     private final GoogleClient googleClient;
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;
@@ -40,7 +40,7 @@ public class ReportService {
     @Transactional
     public Report save(Long memberId, MultipartFile file, ReportCreateRequest request) {
         try {
-            InputStream input = jave2Client.convertToMp3(file.getInputStream());
+            InputStream input = ffmpegClient.convertInputStreamToMp3(file.getInputStream());
             String audioUrl = gcsClient.createAudioUrl(input);
             request.memberIdList().addFirst(memberId);
             List<Member> members = memberRepository.findAllByMemberIds(request.memberIdList());

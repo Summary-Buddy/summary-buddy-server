@@ -13,13 +13,11 @@ public class FFmpegClient {
     @Value("${output-dir-root}")
     private String outputDirRoot;
 
-    public InputStream convertInputStreamToWav(InputStream inputStream) {
-        String outputDir = outputDirRoot + "test-audio.wav";
+    public InputStream convertInputStreamToMp3(InputStream inputStream) {
+        String outputDir = outputDirRoot + "test-audio.mp3";
         try {
             // FFmpeg 명령어
-            String[] command = {
-                "ffmpeg", "-i", "pipe:0", // stdin에서 입력받음
-            };
+            String[] command = {"ffmpeg", "-i", "pipe:0", "-f", "mp3", outputDir};
 
             // ProcessBuilder로 프로세스 시작
             ProcessBuilder processBuilder = new ProcessBuilder(command);
