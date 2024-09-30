@@ -31,7 +31,8 @@ public class FFmpegClient {
             Process process = processBuilder.start();
 
             // 통합된 출력 및 에러 스트림 읽기
-            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+            BufferedReader reader =
+                    new BufferedReader(new InputStreamReader(process.getInputStream()));
             String line;
             while ((line = reader.readLine()) != null) {
                 System.out.println(line);
