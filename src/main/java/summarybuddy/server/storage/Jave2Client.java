@@ -4,6 +4,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import summarybuddy.server.common.exception.InternalServerException;
 import summarybuddy.server.common.type.error.ReportErrorType;
@@ -14,11 +16,14 @@ import ws.schild.jave.encode.EncodingAttributes;
 
 @Component
 public class Jave2Client {
+    @Value("${output-dir-root}")
+    private String outputDirRoot;
+
     public InputStream convertToMp3(InputStream input) {
         try {
-            File source = new File("input.webm");
+            File source = new File(outputDirRoot + "input.webm");
             Files.copy(input, source.toPath());
-            File target = new File("output.mp3");
+            File target = new File(outputDirRoot + "output.mp3");
 
             // Audio Attributes
             AudioAttributes audio = new AudioAttributes();

@@ -10,15 +10,16 @@ import summarybuddy.server.common.type.error.ReportErrorType;
 @Slf4j
 @Service
 public class FFmpegClient {
-    @Value("${ffmpeg.dir}")
-    private String outputDir;
+    @Value("${output-dir-root}")
+    private String outputDirRoot;
 
     public InputStream convertInputStreamToWav(InputStream inputStream) {
+        String outputDir = outputDirRoot + "test-audio.wav";
         try {
             // FFmpeg 명령어
             String[] command = {
                 "ffmpeg", "-i", "pipe:0", // stdin에서 입력받음
-                outputDir
+
             };
 
             // ProcessBuilder로 프로세스 시작
