@@ -34,7 +34,7 @@ public class Jave2Client {
 
             // Encoding attributes
             EncodingAttributes attrs = new EncodingAttributes();
-            attrs.setInputFormat("mp3"); // Change to flac if you prefer flac
+            attrs.setOutputFormat("mp3"); // Change to flac if you prefer flac
             attrs.setAudioAttributes(audio);
 
             // Encode
