@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import lombok.Data;
+import lombok.Getter;
 import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -86,7 +86,7 @@ public class JsonUsernamePasswordAuthenticationFilter
         response.getWriter().write(jwtResponse);
     }
 
-    @Data
+    @Getter
     private static class LoginDto {
         String username;
         String password;
