@@ -22,7 +22,7 @@ public class Report {
     @Column(columnDefinition = "TEXT")
     private String content;
 
-    @Column @NotNull private String fileDirectory;
+    @Column private String fileDirectory;
 
     @Column @NotNull @CreatedDate private LocalDateTime createdAt;
 

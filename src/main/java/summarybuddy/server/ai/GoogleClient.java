@@ -58,11 +58,13 @@ public class GoogleClient {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audioBytes);
             AudioFormat audioFormat =
                     new AudioFormat(
-                            AudioFormat.Encoding.PCM_FLOAT, 16000.0F, 32, 1, 4, 16000.0F, false);
+                            AudioFormat.Encoding.PCM_SIGNED, 48000.0F, 32, 1, 4, 48000.0F, false);
             AudioInputStream format =
                     AudioSystem.getAudioInputStream(
                             audioFormat,
                             new AudioInputStream(byteArrayInputStream, audioFormat, 1L));
+            //            AudioFileFormat format =
+            // AudioSystem.getAudioFileFormat(byteArrayInputStream);
             log.info("Audio Format: {}", format.getFormat());
 
             RecognitionAudio recognitionAudio =
