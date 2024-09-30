@@ -10,7 +10,7 @@ import summarybuddy.server.common.type.error.ReportErrorType;
 @Slf4j
 @Service
 public class FFmpegClient {
-    @Value("${ffmpeg.dir}")
+    @Value("${output-dir}")
     private String outputDir;
 
     public InputStream convertInputStreamToWav(InputStream inputStream) {
