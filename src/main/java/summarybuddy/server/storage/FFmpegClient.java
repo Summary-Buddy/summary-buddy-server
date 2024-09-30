@@ -19,7 +19,6 @@ public class FFmpegClient {
             // FFmpeg 명령어
             String[] command = {
                 "ffmpeg", "-i", "pipe:0", // stdin에서 입력받음
-
             };
 
             // ProcessBuilder로 프로세스 시작
