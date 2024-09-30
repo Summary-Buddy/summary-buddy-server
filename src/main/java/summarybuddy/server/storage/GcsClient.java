@@ -11,7 +11,6 @@ import java.time.LocalDateTime;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import org.springframework.web.multipart.MultipartFile;
 import summarybuddy.server.common.exception.InternalServerException;
 import summarybuddy.server.common.type.error.CommonErrorType;
 
@@ -24,11 +23,17 @@ public class GcsClient {
     @Value("${google.storage.bucket-name}")
     private String bucketName;
 
-    public String createAudioUrl(MultipartFile file) {
+    private final FFmpegClient ffmpegClient;
+
+    public GcsClient(FFmpegClient ffmpegClient) {
+        this.ffmpegClient = ffmpegClient;
+    }
+
+    public String createAudioUrl(InputStream input) {
         try {
             Storage storage = getStorage();
-            String objectName = "record/new-file-" + LocalDateTime.now().getNano();
-            uploadObject(file.getInputStream(), objectName, storage);
+            String objectName = "record/new-file-" + LocalDateTime.now().getNano() + ".wav";
+            uploadObject(input, objectName, "audio/wav", storage);
 
             return "gs://" + bucketName + "/" + objectName;
         } catch (Exception e) {
@@ -41,7 +46,7 @@ public class GcsClient {
         try {
             Storage storage = getStorage();
             String objectName = "pdf/new-file-" + LocalDateTime.now().getNano();
-            uploadObject(input, objectName, storage);
+            uploadObject(input, objectName, "application/pdf", storage);
 
             return objectName;
         } catch (Exception e) {
@@ -63,10 +68,11 @@ public class GcsClient {
         return storage;
     }
 
-    private void uploadObject(InputStream input, String objectName, Storage storage)
+    private void uploadObject(
+            InputStream input, String objectName, String contentType, Storage storage)
             throws IOException {
         BlobId blobId = BlobId.of(bucketName, objectName);
-        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).build();
+        BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(contentType).build();
         Storage.BlobWriteOption precondition = Storage.BlobWriteOption.doesNotExist();
         storage.createFrom(blobInfo, input, precondition);
     }

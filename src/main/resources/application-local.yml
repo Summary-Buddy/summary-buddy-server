@@ -25,5 +25,6 @@ google:
     bucket-name: ${GOOGLE_BUCKET_NAME}
 
 client.url: ${CLIENT_URL}
+ffmpeg.dir: ${FFMPEG_OUTPUT_DIR}
 
 #logging.level.root: DEBUG
