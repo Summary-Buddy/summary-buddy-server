@@ -1,4 +1,4 @@
-FROM amazoncorretto:21-jdk
+FROM amazoncorretto:21
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
 RUN sudo apt install ffmpeg
