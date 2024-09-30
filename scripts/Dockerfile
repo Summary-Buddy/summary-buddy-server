@@ -1,5 +1,6 @@
 FROM amazoncorretto:21-alpine-jdk
 ARG JAR_FILE=build/libs/*.jar
 COPY ${JAR_FILE} app.jar
+RUN sudo apt install ffmpeg
 EXPOSE 8080
 ENTRYPOINT ["java","-jar","/app.jar"]
