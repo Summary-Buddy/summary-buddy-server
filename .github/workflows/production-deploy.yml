@@ -2,7 +2,7 @@ name: production Deploy
 on:
   push:
     branches:
-      - main
+      - fix/ffmpeg-docker
 env:
   DOCKERHUB_USERNAME: ywonchae1
   DOCKERHUB_IMAGE_NAME: summarybuddy-server
