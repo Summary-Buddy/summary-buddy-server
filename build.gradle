@@ -58,6 +58,9 @@ dependencies {
 
 	// iText pdf
 	implementation 'com.itextpdf:itextpdf:5.5.13.4'
+
+	// JAVE2
+	implementation 'ws.schild:jave-all-deps:3.5.0'
 }
 
 def querydslDir = 'src/main/generated'
