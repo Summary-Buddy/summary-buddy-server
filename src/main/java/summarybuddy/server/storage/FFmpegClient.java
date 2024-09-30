@@ -2,7 +2,6 @@ package summarybuddy.server.storage;
 
 import java.io.*;
 import java.nio.file.Files;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,6 +34,8 @@ public class FFmpegClient {
             if (exitCode == 0) {
                 FileInputStream input = new FileInputStream(target);
                 log.info("Conversion successful! Output file: " + outputDir);
+                source.delete();
+                target.delete();
                 return input;
             } else {
                 log.info("Conversion failed with exit code: " + exitCode + " " + outputDir);
