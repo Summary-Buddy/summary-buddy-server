@@ -20,10 +20,10 @@ public class Jave2Client {
     private String outputDirRoot;
 
     public InputStream convertToMp3(InputStream input) {
+        File source = new File(outputDirRoot + "input.webm");
+        File target = new File(outputDirRoot + "output.mp3");
         try {
-            File source = new File(outputDirRoot + "input.webm");
             Files.copy(input, source.toPath());
-            File target = new File(outputDirRoot + "output.mp3");
 
             // Audio Attributes
             AudioAttributes audio = new AudioAttributes();
@@ -48,6 +48,8 @@ public class Jave2Client {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+        source.delete();
+        target.delete();
         throw new InternalServerException(ReportErrorType.MP3_CONVERT);
     }
 }
