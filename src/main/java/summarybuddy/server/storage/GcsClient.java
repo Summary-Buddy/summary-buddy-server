@@ -8,6 +8,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +18,7 @@ import summarybuddy.server.common.type.error.CommonErrorType;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class GcsClient {
     @Value("${google.ai.credential}")
     private String googleAiCridential;
@@ -24,10 +27,6 @@ public class GcsClient {
     private String bucketName;
 
     private final FFmpegClient ffmpegClient;
-
-    public GcsClient(FFmpegClient ffmpegClient) {
-        this.ffmpegClient = ffmpegClient;
-    }
 
     public String createAudioUrl(InputStream input) {
         try {
