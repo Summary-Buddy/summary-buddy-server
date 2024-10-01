@@ -8,6 +8,7 @@ import java.io.*;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import summarybuddy.server.ai.GoogleClient;
@@ -91,7 +92,7 @@ public class ReportService {
         PdfWriter.getInstance(document, out);
         document.addLanguage("ko-KR");
         document.open();
-        File fontFile = new File("src/main/resources/static/PretendardVariable.ttf");
+        File fontFile = new ClassPathResource("static/PretendardVariable.ttf").getFile();
         BaseFont unicode =
                 BaseFont.createFont(
                         fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
