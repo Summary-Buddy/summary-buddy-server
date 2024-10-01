@@ -76,10 +76,6 @@ public class GcsClient {
     }
 
     public String getUrl(String fileDirectory) {
-        return "https://storage.cloud.google.com/"
-                + bucketName
-                + "/"
-                + fileDirectory
-                + "?authuser=3";
+        return "https://storage.cloud.google.com/" + bucketName + "/" + fileDirectory;
     }
 }
