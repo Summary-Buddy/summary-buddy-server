@@ -27,4 +27,4 @@ google:
 client.url: ${CLIENT_URL}
 output-dir: ${OUTPUT_DIR_ROOT}
 
-logging.level.root: DEBUG
+#logging.level.root: DEBUG
