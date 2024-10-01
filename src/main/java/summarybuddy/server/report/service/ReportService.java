@@ -92,10 +92,10 @@ public class ReportService {
         PdfWriter.getInstance(document, out);
         document.addLanguage("ko-KR");
         document.open();
-        File fontFile = new ClassPathResource("static/PretendardVariable.ttf").getFile();
+        String fontFilePath = new ClassPathResource("static/PretendardVariable.ttf").getPath();
         BaseFont unicode =
                 BaseFont.createFont(
-                        fontFile.getAbsolutePath(), BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                        fontFilePath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Font font = new Font(unicode, 18);
         document.add(new Paragraph(report.getContent(), font));
         document.close();
