@@ -20,3 +20,5 @@ services:
 #      - traefik.http.routers.backend.middlewares=backend-stripprefix
 #      - traefik.http.middlewares.backend-stripprefix.stripprefix.prefixes=/api
       - traefik.http.routers.backend.tls.certresolver=letsencrypt
+    networks:
+      - summarybuddy
