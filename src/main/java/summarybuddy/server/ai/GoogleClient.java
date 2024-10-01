@@ -5,12 +5,8 @@ import com.google.api.gax.core.FixedCredentialsProvider;
 import com.google.api.gax.longrunning.OperationFuture;
 import com.google.auth.oauth2.ServiceAccountCredentials;
 import com.google.cloud.speech.v1.*;
-import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
 import java.util.List;
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioInputStream;
-import javax.sound.sampled.AudioSystem;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,7 +15,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import org.springframework.web.multipart.MultipartFile;
 import summarybuddy.server.ai.dto.request.ContentRequest;
 import summarybuddy.server.ai.dto.request.Contents;
 import summarybuddy.server.ai.dto.request.RequestParts;
@@ -42,7 +37,7 @@ public class GoogleClient {
     @Value("${google.ai.key}")
     private String googleAiKey;
 
-    public String speechToText(MultipartFile file, String audioUrl) {
+    public String speechToText(String audioUrl) {
 
         try {
             CredentialsProvider credentialsProvider =
@@ -53,20 +48,6 @@ public class GoogleClient {
                     SpeechSettings.newBuilder().setCredentialsProvider(credentialsProvider).build();
             SpeechClient speechClient = SpeechClient.create(settings);
 
-            byte[] audioBytes = file.getBytes();
-            //            ByteString audioData = ByteString.copyFrom(audioBytes);
-            ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audioBytes);
-            AudioFormat audioFormat =
-                    new AudioFormat(
-                            AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 128, 2, 4, 22050.0F, false);
-            AudioInputStream format =
-                    AudioSystem.getAudioInputStream(
-                            audioFormat,
-                            new AudioInputStream(byteArrayInputStream, audioFormat, 1L));
-            //            AudioFileFormat format =
-            // AudioSystem.getAudioFileFormat(byteArrayInputStream);
-            log.info("Audio Format: {}", format.getFormat());
-
             RecognitionAudio recognitionAudio =
                     RecognitionAudio.newBuilder().setUri(audioUrl).build();
 
@@ -74,14 +55,10 @@ public class GoogleClient {
             RecognitionConfig config =
                     RecognitionConfig.newBuilder()
                             .setEncoding(RecognitionConfig.AudioEncoding.MP3)
-                            .setSampleRateHertz((int) format.getFormat().getFrameRate())
+                            .setSampleRateHertz(44100)
                             .setLanguageCode("ko-KR")
                             .build();
 
-            // Performs speech recognition on the audio file
-            //            RecognizeResponse response = speechClient.recognize(config,
-            // recognitionAudio);
-            //            List<SpeechRecognitionResult> results = response.getResultsList();
             OperationFuture<LongRunningRecognizeResponse, LongRunningRecognizeMetadata>
                     recognizeResponse =
                             speechClient.longRunningRecognizeAsync(config, recognitionAudio);
@@ -94,9 +71,6 @@ public class GoogleClient {
             StringBuilder resultBuilder = new StringBuilder();
 
             for (SpeechRecognitionResult result : results) {
-                // There can be several alternative transcripts for a given chunk of speech. Just
-                // use the
-                // first (most likely) one here.
                 SpeechRecognitionAlternative alternative = result.getAlternativesList().getFirst();
                 log.info("Transcription: {}", alternative.getTranscript());
                 resultBuilder.append("\n").append(alternative.getTranscript());

@@ -48,7 +48,7 @@ public class ReportService {
             List<Member> members = memberRepository.findAllByMemberIds(request.memberIdList());
             List<String> participants = members.stream().map(Member::getUsername).toList();
 
-            String result = googleClient.speechToText(file, audioUrl);
+            String result = googleClient.speechToText(audioUrl);
             String summary = googleClient.getSummary(result, participants);
             Report report = ReportMapper.from(summary);
             return reportRepository.save(report);
