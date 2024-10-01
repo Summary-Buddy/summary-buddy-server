@@ -58,7 +58,7 @@ public class GoogleClient {
             ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(audioBytes);
             AudioFormat audioFormat =
                     new AudioFormat(
-                            AudioFormat.Encoding.PCM_SIGNED, 48000.0F, 32, 1, 4, 48000.0F, false);
+                            AudioFormat.Encoding.PCM_SIGNED, 44100.0F, 128, 2, 4, 22050.0F, false);
             AudioInputStream format =
                     AudioSystem.getAudioInputStream(
                             audioFormat,
@@ -73,7 +73,7 @@ public class GoogleClient {
             // Builds the sync recognize request
             RecognitionConfig config =
                     RecognitionConfig.newBuilder()
-                            .setEncoding(RecognitionConfig.AudioEncoding.LINEAR16)
+                            .setEncoding(RecognitionConfig.AudioEncoding.MP3)
                             .setSampleRateHertz((int) format.getFormat().getFrameRate())
                             .setLanguageCode("ko-KR")
                             .build();
