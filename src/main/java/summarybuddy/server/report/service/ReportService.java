@@ -5,6 +5,7 @@ import com.itextpdf.text.pdf.BaseFont;
 import com.itextpdf.text.pdf.PdfWriter;
 import jakarta.transaction.Transactional;
 import java.io.*;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -59,7 +60,8 @@ public class ReportService {
 
     public ReportResponse findById(Long reportId) {
         Report report = getReportById(reportId);
-        return ReportResponse.of(report);
+        String previewTitle = report.getCreatedAt().format(DateTimeFormatter.ofPattern("MMdd 회의록"));
+        return ReportResponse.of(report, previewTitle);
     }
 
     @Transactional
