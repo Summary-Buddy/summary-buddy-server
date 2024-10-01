@@ -105,10 +105,6 @@ jobs:
           path: scripts/docker-compose.yml
           remote_path: /home/${{ secrets.EC2_USERNAME }}/
 
-      - name: Logging
-        run: |
-          echo "${{ steps.metadata.outputs.tags }} LOOK!!"
-
       # EC2로 배포
       - name: Deploy to EC2 Server
         uses: appleboy/ssh-action@master
@@ -121,7 +117,7 @@ jobs:
           envs: IMAGE_FULL_URL, DOCKERHUB_IMAGE_NAME # docker-compose.yml 에서 사용할 환경 변수
           script: |
             echo "${{ secrets.DOCKERHUB_ACCESS_TOKEN }}" | docker login -u "${{ env.DOCKERHUB_USERNAME }}" --password-stdin
-            docker container stop ${{ env.DOCKERHUB_IMAGE_NAME }}
-            docker container rm ${{ env.DOCKERHUB_IMAGE_NAME }}
+#            docker container stop ${{ env.DOCKERHUB_IMAGE_NAME }}
+#            docker container rm ${{ env.DOCKERHUB_IMAGE_NAME }}
             docker compose up --build -d
             docker image prune -a -f
