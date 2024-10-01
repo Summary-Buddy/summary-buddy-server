@@ -28,8 +28,8 @@ public class GcsClient {
     public String createAudioUrl(InputStream input) {
         try {
             Storage storage = getStorage();
-            String objectName = "record/new-file-" + LocalDateTime.now().getNano() + ".mp3";
-            uploadObject(input, objectName, "audio/mp3", storage);
+            String objectName = "record/new-file-" + LocalDateTime.now().getNano() + ".webm";
+            uploadObject(input, objectName, "audio/webm", storage);
 
             return "gs://" + bucketName + "/" + objectName;
         } catch (Exception e) {

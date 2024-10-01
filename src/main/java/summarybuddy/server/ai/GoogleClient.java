@@ -54,8 +54,8 @@ public class GoogleClient {
             // Builds the sync recognize request
             RecognitionConfig config =
                     RecognitionConfig.newBuilder()
-                            .setEncoding(RecognitionConfig.AudioEncoding.MP3)
-                            .setSampleRateHertz(44100)
+                            .setEncoding(RecognitionConfig.AudioEncoding.WEBM_OPUS)
+                            .setSampleRateHertz(48000)
                             .setLanguageCode("ko-KR")
                             .build();
 
