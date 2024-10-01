@@ -22,3 +22,7 @@ services:
       - traefik.http.routers.backend.tls.certresolver=letsencrypt
     networks:
       - summarybuddy
+
+  networks:
+    summarybuddy:
+      name: summarybuddy
