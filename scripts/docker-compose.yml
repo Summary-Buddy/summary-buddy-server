@@ -23,3 +23,7 @@ services:
       - traefik.docker.network=summarybuddy
     networks:
       - summarybuddy
+
+  networks:
+    summarybuddy:
+      name: summarybuddy
