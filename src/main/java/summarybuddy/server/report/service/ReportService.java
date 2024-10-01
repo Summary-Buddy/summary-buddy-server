@@ -94,8 +94,7 @@ public class ReportService {
         document.open();
         String fontFilePath = new ClassPathResource("static/PretendardVariable.ttf").getPath();
         BaseFont unicode =
-                BaseFont.createFont(
-                        fontFilePath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
+                BaseFont.createFont(fontFilePath, BaseFont.IDENTITY_H, BaseFont.EMBEDDED);
         Font font = new Font(unicode, 18);
         document.add(new Paragraph(report.getContent(), font));
         document.close();
