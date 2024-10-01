@@ -26,7 +26,6 @@ import summarybuddy.server.report.dto.response.ReportResponse;
 import summarybuddy.server.report.mapper.ReportMapper;
 import summarybuddy.server.report.repository.ReportRepository;
 import summarybuddy.server.report.repository.domain.Report;
-import summarybuddy.server.storage.FFmpegClient;
 import summarybuddy.server.storage.GcsClient;
 
 @Slf4j
@@ -35,15 +34,13 @@ import summarybuddy.server.storage.GcsClient;
 public class ReportService {
     private final GcsClient gcsClient;
     private final GoogleClient googleClient;
-    private final FFmpegClient ffmpegClient;
     private final MemberRepository memberRepository;
     private final ReportRepository reportRepository;
 
     @Transactional
     public Report save(Long memberId, MultipartFile file, ReportCreateRequest request) {
         try {
-            InputStream input = ffmpegClient.convertInputStreamToMp3(file.getInputStream());
-            String audioUrl = gcsClient.createAudioUrl(input);
+            String audioUrl = gcsClient.createAudioUrl(file.getInputStream());
             request.memberIdList().addFirst(memberId);
             List<Member> members = memberRepository.findAllByMemberIds(request.memberIdList());
             List<String> participants = members.stream().map(Member::getUsername).toList();
