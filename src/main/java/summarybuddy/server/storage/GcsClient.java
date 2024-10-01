@@ -25,8 +25,6 @@ public class GcsClient {
     @Value("${google.storage.bucket-name}")
     private String bucketName;
 
-    private final FFmpegClient ffmpegClient;
-
     public String createAudioUrl(InputStream input) {
         try {
             Storage storage = getStorage();
