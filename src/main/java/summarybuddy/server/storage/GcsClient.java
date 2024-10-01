@@ -8,6 +8,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.time.LocalDateTime;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -16,6 +17,7 @@ import summarybuddy.server.common.type.error.CommonErrorType;
 
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class GcsClient {
     @Value("${google.ai.credential}")
     private String googleAiCridential;
@@ -25,15 +27,11 @@ public class GcsClient {
 
     private final FFmpegClient ffmpegClient;
 
-    public GcsClient(FFmpegClient ffmpegClient) {
-        this.ffmpegClient = ffmpegClient;
-    }
-
     public String createAudioUrl(InputStream input) {
         try {
             Storage storage = getStorage();
-            String objectName = "record/new-file-" + LocalDateTime.now().getNano() + ".wav";
-            uploadObject(input, objectName, "audio/wav", storage);
+            String objectName = "record/new-file-" + LocalDateTime.now().getNano() + ".mp3";
+            uploadObject(input, objectName, "audio/mp3", storage);
 
             return "gs://" + bucketName + "/" + objectName;
         } catch (Exception e) {

@@ -40,7 +40,7 @@ public class ReportService {
     @Transactional
     public Report save(Long memberId, MultipartFile file, ReportCreateRequest request) {
         try {
-            InputStream input = ffmpegClient.convertInputStreamToWav(file.getInputStream());
+            InputStream input = ffmpegClient.convertInputStreamToMp3(file.getInputStream());
             String audioUrl = gcsClient.createAudioUrl(input);
             request.memberIdList().addFirst(memberId);
             List<Member> members = memberRepository.findAllByMemberIds(request.memberIdList());

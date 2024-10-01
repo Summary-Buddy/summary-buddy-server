@@ -94,6 +94,7 @@ public class SecurityConfig {
                 new JsonUsernamePasswordAuthenticationFilter(jwtUtil, new ObjectMapper());
         jsonUsernamePasswordAuthenticationFilter.setAuthenticationManager(
                 authenticationManager(authenticationConfiguration));
+        jsonUsernamePasswordAuthenticationFilter.setFilterProcessesUrl("/api/login");
         return jsonUsernamePasswordAuthenticationFilter;
     }
 }

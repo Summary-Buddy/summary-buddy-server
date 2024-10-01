@@ -65,6 +65,6 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         return request.getRequestURI().startsWith("/swagger-ui/**")
                 || request.getRequestURI().startsWith("/api/member/join")
                 || request.getRequestURI().startsWith("/api/member/check-username")
-                || request.getRequestURI().startsWith("/login");
+                || request.getRequestURI().startsWith("/api/login");
     }
 }
