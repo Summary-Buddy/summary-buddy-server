@@ -105,6 +105,10 @@ jobs:
           path: scripts/docker-compose.yml
           remote_path: /home/${{ secrets.EC2_USERNAME }}/
 
+      - name: Logging
+        run: |
+          echo "${{ steps.metadata.outputs.tags }} LOOK!!"
+
       # EC2로 배포
       - name: Deploy to EC2 Server
         uses: appleboy/ssh-action@master
