@@ -23,6 +23,6 @@ services:
     networks:
       - summarybuddy
 
-  networks:
-    summarybuddy:
-      name: summarybuddy
+networks:
+  summarybuddy:
+    name: summarybuddy
