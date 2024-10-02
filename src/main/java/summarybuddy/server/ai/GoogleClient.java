@@ -38,7 +38,7 @@ public class GoogleClient {
     private String googleAiKey;
 
     public String speechToText(String audioUrl) {
-
+        SpeechClient speechClient = null;
         try {
             CredentialsProvider credentialsProvider =
                     FixedCredentialsProvider.create(
@@ -46,7 +46,7 @@ public class GoogleClient {
                                     new FileInputStream(googleAiCridential)));
             SpeechSettings settings =
                     SpeechSettings.newBuilder().setCredentialsProvider(credentialsProvider).build();
-            SpeechClient speechClient = SpeechClient.create(settings);
+            speechClient = SpeechClient.create(settings);
 
             RecognitionAudio recognitionAudio =
                     RecognitionAudio.newBuilder().setUri(audioUrl).build();
@@ -77,6 +77,9 @@ public class GoogleClient {
             }
             return resultBuilder.toString();
         } catch (Exception e) {
+            if (speechClient != null) {
+                speechClient.shutdown();
+            }
             log.info("EXCEPTION: {}", e.getMessage());
             throw new InternalServerException(CommonErrorType.INTERNAL_SERVER);
         }
@@ -109,12 +112,18 @@ public class GoogleClient {
                         request,
                         ContentResponse.class);
         log.info("Result: {}", response);
-        if (response != null && !response.candidates().isEmpty()) {
+        if (isCandidatesNotEmpty(response)) {
             List<Parts> parts = response.candidates().getFirst().content().parts();
             if (parts != null && !parts.isEmpty()) {
                 return parts.getFirst().text();
             }
         }
         throw new InternalServerException(ReportErrorType.NO_SUMMARY_RESULT);
+    }
+
+    private static boolean isCandidatesNotEmpty(ContentResponse response) {
+        return response != null
+                && response.candidates() != null
+                && !response.candidates().isEmpty();
     }
 }
